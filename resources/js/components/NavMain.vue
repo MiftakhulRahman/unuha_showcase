@@ -9,6 +9,7 @@ import {
 import { urlIsActive } from '@/lib/utils';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
+import { MoreHorizontal } from 'lucide-vue-next';
 
 defineProps<{
     items: NavItem[];
@@ -19,7 +20,19 @@ const page = usePage();
 
 <template>
     <SidebarGroup class="px-2 py-0">
-        <SidebarGroupLabel>Platform</SidebarGroupLabel>
+        <SidebarGroupLabel 
+            class="
+                group-data-[collapsible=icon]:!opacity-100 
+                group-data-[collapsible=icon]:w-full 
+                group-data-[collapsible=icon]:justify-center 
+                group-data-[collapsible=icon]:items-center
+                group-data-[collapsible=icon]:p-0
+            "
+        >
+            <span class="group-data-[collapsible=icon]:hidden">Platform</span>
+            <MoreHorizontal class="!size-5 hidden group-data-[collapsible=icon]:block pr-[2px]" />
+        </SidebarGroupLabel>
+
         <SidebarMenu>
             <SidebarMenuItem v-for="item in items" :key="item.title">
                 <SidebarMenuButton
