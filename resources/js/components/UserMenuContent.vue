@@ -6,14 +6,15 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
-import { logout } from '@/routes';
+import { home, logout } from '@/routes';
 import { edit } from '@/routes/profile';
 import type { User } from '@/types';
 import { Link, router } from '@inertiajs/vue3';
-import { LogOut, Settings } from 'lucide-vue-next';
+import { Home, LogOut, Settings } from 'lucide-vue-next';
 
 interface Props {
     user: User;
+    addHome?: boolean;
 }
 
 const handleLogout = () => {
@@ -31,10 +32,16 @@ defineProps<Props>();
     </DropdownMenuLabel>
     <DropdownMenuSeparator />
     <DropdownMenuGroup>
+        <DropdownMenuItem v-if="addHome" :as-child="true">
+            <Link class="block w-full" :href="home()" prefetch as="button">
+                <Home class="mr-2 h-4 w-4" />
+                Dashboard
+            </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem :as-child="true">
             <Link class="block w-full" :href="edit()" prefetch as="button">
                 <Settings class="mr-2 h-4 w-4" />
-                Settings
+                Pengaturan
             </Link>
         </DropdownMenuItem>
     </DropdownMenuGroup>
@@ -48,7 +55,7 @@ defineProps<Props>();
             data-test="logout-button"
         >
             <LogOut class="mr-2 h-4 w-4" />
-            Log out
+            Keluar
         </Link>
     </DropdownMenuItem>
 </template>
