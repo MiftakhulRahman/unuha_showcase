@@ -613,8 +613,19 @@ email:
 #### **User Management (Admin Only)**
 ```
 /users                      → Daftar semua user
-/users/dosen                → CRUD dosen
-/users/mahasiswa            → CRUD mahasiswa
+/admin/dosen                → CRUD data dosen
+/admin/mahasiswa            → CRUD data mahasiswa
+/admin/prodis               → CRUD program studi
+/admin/kategoris            → CRUD kategori project
+/admin/tools                → CRUD teknologi/tools
+```
+
+#### **Additional Role-Specific Routes**
+```
+/penilaian                  → Penilaian challenge oleh dosen
+/profile/dosen              → Edit profil akademis dosen
+/profile/mahasiswa          → Edit profil mahasiswa
+/kolaborasi                 → Kelola kolaborasi project mahasiswa
 ```
 
 #### **Master Data (Admin Only)**
@@ -634,6 +645,110 @@ email:
 /saved                      → Project tersimpan (mahasiswa)
 /notifications              → Daftar notifikasi
 ```
+
+---
+
+## 🔐 KONSEP AUTHENTICATION & AUTHORIZATION
+
+### **Implementasi Role-Based Access Control**
+
+#### **1. Role Management**
+Sistem menyediakan tiga level role utama dengan hak akses berbeda:
+- **superadmin**: Akses penuh ke semua fitur sistem
+- **dosen**: Akses ke fitur challenge, penilaian, dan manajemen project pribadi
+- **mahasiswa**: Akses ke manajemen project, partisipasi challenge, dan kolaborasi
+
+#### **2. Menu Dinamis Berdasarkan Role**
+Menu sidebar diimplementasikan secara dinamis berdasarkan role pengguna yang login:
+
+**Superadmin Menu:**
+- Dasbor
+- Manajemen Pengguna (CRUD pengguna, reset password)
+- Manajemen Dosen (CRUD data dosen)
+- Manajemen Mahasiswa (CRUD data mahasiswa)
+- Manajemen Program Studi (CRUD prodi)
+- Manajemen Kategori (CRUD kategori project)
+- Manajemen Teknologi (CRUD teknologi/tools)
+- Semua Project (Moderasi semua project)
+- Semua Challenge (Monitor semua challenge)
+
+**Dosen Menu:**
+- Dasbor
+- Project Saya (Upload dan kelola portfolio penelitian/pengabdian)
+- Manajemen Challenge (Buat dan kelola kompetisi)
+- Penilaian Challenge (Nilai submission mahasiswa)
+- Profil Dosen (Update data akademis)
+
+**Mahasiswa Menu:**
+- Dasbor
+- Project Saya (Upload dan kelola portfolio karya)
+- Ikuti Challenge (Daftar dan kirim project ke challenge)
+- Kolaborasi (Kelola tim proyek)
+- Profil Mahasiswa (Kelola biodata dan skill)
+
+#### **3. Pengimplementasian Teknis**
+Implementasi dilakukan di file `AppSidebar.vue` dengan menggunakan logika komputasi berdasarkan role pengguna:
+
+```typescript
+const mainNavItems = computed<NavItem[]>(() => {
+    // Semua role mendapatkan Dasbor
+    const items: NavItem[] = [
+        {
+            title: 'Dasbor',
+            href: dashboard().url,
+            icon: LayoutGrid,
+        },
+    ];
+
+    if (!user.value) return items;
+
+    // Superadmin menu
+    if (user.value.role === 'superadmin') {
+        items.push(
+            {
+                title: 'Manajemen Pengguna',
+                href: '/admin/users',
+                icon: Users,
+                description: 'Kelola akun dosen dan mahasiswa',
+            },
+            // ... menu manajemen lainnya
+        );
+    }
+    // Dosen menu
+    else if (user.value.role === 'dosen') {
+        items.push(
+            {
+                title: 'Project Saya',
+                href: '/projects',
+                icon: BookOpen,
+                description: 'Portfolio project penelitian/pengabdian',
+            },
+            // ... menu dosen lainnya
+        );
+    }
+    // Mahasiswa menu
+    else if (user.value.role === 'mahasiswa') {
+        items.push(
+            {
+                title: 'Project Saya',
+                href: '/projects',
+                icon: BookOpen,
+                description: 'Portfolio karya mahasiswa',
+            },
+            // ... menu mahasiswa lainnya
+        );
+    }
+
+    return items;
+});
+```
+
+#### **4. Route Protection**
+Semua route yang memerlukan otentikasi dilindungi menggunakan middleware `auth` dan untuk akses tertentu menggunakan role-based authorization di controller:
+
+- Middleware `auth` untuk semua route yang memerlukan login
+- Custom middleware/function untuk memastikan role yang sesuai
+- Laravel Policies untuk granular authorization
 
 ---
 
@@ -774,6 +889,32 @@ Pages/
 │   ├── Prodis.vue
 │   └── Settings.vue
 │
+├── Admin/                   (Admin only)
+│   ├── Dosen/
+│   │   ├── Index.vue       (CRUD Dosen)
+│   │   ├── Create.vue
+│   │   └── Edit.vue
+│   ├── Mahasiswa/
+│   │   ├── Index.vue       (CRUD Mahasiswa)
+│   │   ├── Create.vue
+│   │   └── Edit.vue
+│   └── Prodis/
+│       ├── Index.vue       (CRUD Program Studi)
+│       ├── Create.vue
+│       └── Edit.vue
+│
+├── Evaluations/             (Dosen only)
+│   └── Index.vue           (Penilaian submission challenge)
+│
+├── Profiles/                (Role-based profile management)
+│   ├── Dosen/
+│   │   └── Edit.vue       (Edit profil akademis dosen)
+│   └── Mahasiswa/
+│       └── Edit.vue       (Edit profil mahasiswa)
+│
+├── Collaborations/          (Mahasiswa only)
+│   └── Index.vue          (Kelola kolaborasi tim project)
+│
 ├── Profile/
 │   ├── Show.vue            (Public profile)
 │   └── Edit.vue            (Edit own profile)
@@ -806,6 +947,41 @@ Fungsi:
 - deleteProject(project) → Soft Delete, Notify Collaborators
 - featureProject(project) → Set Featured, Notify Owner
 - trackView(project, user, ip) → Save View, Update Counter
+```
+
+#### **AdminController**
+```
+Fungsi:
+- DosenController@index → Menampilkan daftar dosen (Superadmin only)
+- MahasiswaController@index → Menampilkan daftar mahasiswa (Superadmin only)
+- ProdiController@index → Menampilkan daftar program studi (Superadmin only)
+- KategoriController@index → Menampilkan daftar kategori project (Superadmin only)
+- ToolController@index → Menampilkan daftar teknologi/tools (Superadmin only)
+```
+
+#### **EvaluationService**
+```
+Fungsi:
+- evaluationController@index → Menampilkan submission untuk dinilai (Dosen only)
+- gradeSubmission(submission, score, feedback) → Memberikan nilai dan feedback
+```
+
+#### **ProfileService**
+```
+Fungsi:
+- profileDosenController@edit → Menampilkan form edit profil dosen (Dosen only)
+- profileMahasiswaController@edit → Menampilkan form edit profil mahasiswa (Mahasiswa only)
+- updateAcademicProfile(data) → Update profil akademis dosen
+- updateStudentProfile(data) → Update profil mahasiswa
+```
+
+#### **CollaborationService**
+```
+Fungsi:
+- collaborationController@index → Menampilkan daftar kolaborasi aktif (Mahasiswa only)
+- inviteCollaborator(project, user) → Mengundang pengguna ke kolaborasi project
+- acceptCollaboration(invitation) → Menerima undangan kolaborasi
+- rejectCollaboration(invitation) → Menolak undangan kolaborasi
 ```
 
 #### **ChallengeService**
@@ -869,6 +1045,48 @@ gradeSubmission(user, challenge):
 delete(user, challenge):
     → creator (jika belum ada submission)
     → superadmin (paksa delete)
+```
+
+---
+
+### **Role-Based Authorization Implementation**
+
+#### **Contoh Controller Protection:**
+
+**AdminController (Superadmin Only):**
+```php
+public function __construct()
+{
+    $this->middleware('auth');
+    $this->middleware(function ($request, $next) {
+        abort_if(!auth()->user()->isSuperAdmin(), 403);
+        return $next($request);
+    });
+}
+```
+
+**DosenController (Dosen Only):**
+```php
+public function __construct()
+{
+    $this->middleware('auth');
+    $this->middleware(function ($request, $next) {
+        abort_if(!auth()->user()->isDosen(), 403);
+        return $next($request);
+    });
+}
+```
+
+**MahasiswaController (Mahasiswa Only):**
+```php
+public function __construct()
+{
+    $this->middleware('auth');
+    $this->middleware(function ($request, $next) {
+        abort_if(!auth()->user()->isMahasiswa(), 403);
+        return $next($request);
+    });
+}
 ```
 
 ---
@@ -3282,3 +3500,50 @@ Help Center Pages:
 
 PERHATIAN!! YANG TAMPIL DI WEB HARUS BERBAHASA INDONESIA
 INI PAKAI LARAVEL 12 + VUE STATER KIT RESMI DARI LARAVEL PAKAI INERTIA
+
+---
+
+## ✅ IMPLEMENTASI MENU BERDASARKAN ROLE
+
+### **Ringkasan Implementasi**
+
+Sistem menu berdasarkan role telah berhasil diimplementasikan dengan fitur:
+
+#### **🔴 Superadmin (Administrator Pusat)**
+- Akses langsung ke semua manajemen di sidebar:
+  - Manajemen Pengguna (CRUD pengguna, reset password, toggle status)
+  - Manajemen Dosen (CRUD data dosen, aktivasi akun)
+  - Manajemen Mahasiswa (CRUD data mahasiswa, aktivasi akun)
+  - Manajemen Master Data (Program Studi, Kategori, Teknologi)
+  - Moderasi semua project dan challenge
+
+#### **🔵 Dosen**
+- Menu khusus untuk dosen di sidebar:
+  - Project Saya (Upload portfolio penelitian/pengabdian)
+  - Manajemen Challenge (Buat dan kelola kompetisi)
+  - Penilaian Challenge (Evaluasi submission mahasiswa)
+  - Profil Dosen (Update data akademis)
+
+#### **🟢 Mahasiswa**
+- Menu khusus untuk mahasiswa di sidebar:
+  - Project Saya (Upload dan kelola karya mahasiswa)
+  - Ikuti Challenge (Partisipasi dalam kompetisi)
+  - Kolaborasi (Kelola tim project)
+  - Profil Mahasiswa (Update biodata dan skill)
+
+### **Struktur Implementasi**
+
+1. **Frontend (Vue.js + TypeScript):**
+   - File: `resources/js/components/AppSidebar.vue`
+   - Implementasi: Dinamis menu berdasarkan role pengguna
+   - Teknik: Computed property untuk membuat menu berbeda per role
+
+2. **Backend (Laravel):**
+   - Routes: `routes/web.php` - implementasi route protection per role
+   - Controllers: Implementasi middleware authorization per role
+   - Models: User model dengan method isSuperAdmin(), isDosen(), isMahasiswa()
+
+3. **Full Bahasa Indonesia:**
+   - Semua menu, label, dan UI dalam bahasa Indonesia
+   - Dashboard content telah diterjemahkan ke bahasa Indonesia
+   - Breadcrumb dan form elements dalam bahasa Indonesia

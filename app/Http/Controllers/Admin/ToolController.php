@@ -9,19 +9,30 @@ use App\Http\Controllers\Controller;
 
 class ToolController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-        $this->middleware(function ($request, $next) {
-            abort_if(!auth()->user()->isSuperAdmin(), 403);
-            return $next($request);
-        });
-    }
-
     public function index()
     {
-        $tools = Tool::latest()->paginate(15);
-        return Inertia::render('Admin/Tools/Index', ['tools' => $tools]);
+        $query = Tool::query();
+
+        // Search
+        if (request()->filled('search')) {
+            $search = request()->get('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                  ->orWhere('slug', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by status
+        if (request()->filled('status')) {
+            $status = request()->get('status');
+            $query->where('is_active', $status === 'active' ? true : false);
+        }
+
+        $tools = $query->latest()->paginate(15)->appends(request()->query());
+        return Inertia::render('Admin/Tools/Index', ['tools' => $tools, 'filters' => [
+            'search' => request()->get('search'),
+            'status' => request()->get('status'),
+        ]]);
     }
 
     public function create()
@@ -71,5 +82,18 @@ class ToolController extends Controller
         $tool->delete();
         return redirect()->route('admin.tools.index')
             ->with('success', 'Tool deleted!');
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $validated = $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'integer|exists:tools,id',
+        ]);
+
+        Tool::whereIn('id', $validated['ids'])->delete();
+        
+        return redirect()->route('admin.tools.index')
+            ->with('success', count($validated['ids']) . ' tools deleted!');
     }
 }

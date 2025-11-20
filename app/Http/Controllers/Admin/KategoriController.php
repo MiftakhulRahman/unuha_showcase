@@ -9,19 +9,30 @@ use App\Http\Controllers\Controller;
 
 class KategoriController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-        $this->middleware(function ($request, $next) {
-            abort_if(!auth()->user()->isSuperAdmin(), 403);
-            return $next($request);
-        });
-    }
-
     public function index()
     {
-        $kategoris = Kategori::latest()->paginate(15);
-        return Inertia::render('Admin/Kategoris/Index', ['kategoris' => $kategoris]);
+        $query = Kategori::query();
+
+        // Search
+        if (request()->filled('search')) {
+            $search = request()->get('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                  ->orWhere('slug', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by status
+        if (request()->filled('status')) {
+            $status = request()->get('status');
+            $query->where('is_active', $status === 'active' ? true : false);
+        }
+
+        $kategoris = $query->latest()->paginate(15)->appends(request()->query());
+        return Inertia::render('Admin/Kategoris/Index', ['kategoris' => $kategoris, 'filters' => [
+            'search' => request()->get('search'),
+            'status' => request()->get('status'),
+        ]]);
     }
 
     public function create()
@@ -69,5 +80,18 @@ class KategoriController extends Controller
         $kategori->delete();
         return redirect()->route('admin.kategoris.index')
             ->with('success', 'Kategori deleted!');
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $validated = $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'integer|exists:kategoris,id',
+        ]);
+
+        Kategori::whereIn('id', $validated['ids'])->delete();
+        
+        return redirect()->route('admin.kategoris.index')
+            ->with('success', count($validated['ids']) . ' kategoris deleted!');
     }
 }

@@ -30,12 +30,40 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // Admin Routes (Superadmin Only)
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
-    Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
-    Route::post('users/{user}/toggle-status', [\App\Http\Controllers\Admin\UserController::class, 'toggleStatus'])->name('users.toggleStatus');
-    Route::post('users/{user}/reset-password', [\App\Http\Controllers\Admin\UserController::class, 'resetPassword'])->name('users.resetPassword');
-    
-    Route::resource('kategoris', \App\Http\Controllers\Admin\KategoriController::class);
-    Route::resource('tools', \App\Http\Controllers\Admin\ToolController::class);
+    Route::middleware('admin.superadmin')->group(function () {
+        Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+        Route::post('users/{user}/toggle-status', [\App\Http\Controllers\Admin\UserController::class, 'toggleStatus'])->name('users.toggleStatus');
+        Route::post('users/{user}/reset-password', [\App\Http\Controllers\Admin\UserController::class, 'resetPassword'])->name('users.resetPassword');
+        Route::post('users/bulk-delete', [\App\Http\Controllers\Admin\UserController::class, 'bulkDelete'])->name('users.bulkDelete');
+
+        Route::resource('kategoris', \App\Http\Controllers\Admin\KategoriController::class);
+        Route::post('kategoris/bulk-delete', [\App\Http\Controllers\Admin\KategoriController::class, 'bulkDelete'])->name('kategoris.bulkDelete');
+        
+        Route::resource('tools', \App\Http\Controllers\Admin\ToolController::class);
+        Route::post('tools/bulk-delete', [\App\Http\Controllers\Admin\ToolController::class, 'bulkDelete'])->name('tools.bulkDelete');
+
+        Route::resource('dosen', \App\Http\Controllers\Admin\DosenController::class);
+        Route::post('dosen/bulk-delete', [\App\Http\Controllers\Admin\DosenController::class, 'bulkDelete'])->name('dosen.bulkDelete');
+        
+        Route::resource('mahasiswa', \App\Http\Controllers\Admin\MahasiswaController::class);
+        Route::post('mahasiswa/bulk-delete', [\App\Http\Controllers\Admin\MahasiswaController::class, 'bulkDelete'])->name('mahasiswa.bulkDelete');
+        
+        Route::resource('prodis', \App\Http\Controllers\Admin\ProdiController::class);
+        Route::post('prodis/bulk-delete', [\App\Http\Controllers\Admin\ProdiController::class, 'bulkDelete'])->name('prodis.bulkDelete');
+    });
+});
+
+// Additional routes for dosen and mahasiswa specific features
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Challenge evaluation by dosen
+    Route::get('penilaian', [\App\Http\Controllers\EvaluationController::class, 'index'])->name('evaluations.index');
+
+    // Profile management based on user role
+    Route::get('profile/dosen', [\App\Http\Controllers\ProfileDosenController::class, 'edit'])->name('profile.dosen.edit');
+    Route::get('profile/mahasiswa', [\App\Http\Controllers\ProfileMahasiswaController::class, 'edit'])->name('profile.mahasiswa.edit');
+
+    // Collaboration management
+    Route::get('kolaborasi', [\App\Http\Controllers\CollaborationController::class, 'index'])->name('collaborations.index');
 });
 
 require __DIR__.'/settings.php';

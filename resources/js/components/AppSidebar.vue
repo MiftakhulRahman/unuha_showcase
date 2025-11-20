@@ -13,7 +13,18 @@ import {
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
-import { LayoutGrid, BookOpen, Trophy, Settings, Users, FileText } from 'lucide-vue-next';
+import {
+    LayoutGrid,
+    Users,
+    GraduationCap,
+    User,
+    Trophy,
+    BookOpen,
+    Settings,
+    Wrench,
+    FileText,
+    Database
+} from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 import { computed } from 'vue';
 
@@ -23,7 +34,7 @@ const user = computed(() => page.props.auth?.user);
 const mainNavItems = computed<NavItem[]>(() => {
     const items: NavItem[] = [
         {
-            title: 'Dashboard',
+            title: 'Dasbor',
             href: dashboard().url,
             icon: LayoutGrid,
         },
@@ -34,17 +45,57 @@ const mainNavItems = computed<NavItem[]>(() => {
     // === SUPERADMIN MENU ===
     if (user.value.role === 'superadmin') {
         items.push(
+            // Manajemen User (Dosen & Mahasiswa)
             {
-                title: 'Projects',
-                href: '/projects',
-                icon: BookOpen,
-                description: 'View & manage all projects',
+                title: 'Manajemen Pengguna',
+                href: '/admin/users',
+                icon: Users,
+                description: 'Kelola akun dosen dan mahasiswa',
             },
             {
-                title: 'Challenges',
+                title: 'Manajemen Dosen',
+                href: '/admin/dosen',
+                icon: GraduationCap,
+                description: 'Kelola data dosen',
+            },
+            {
+                title: 'Manajemen Mahasiswa',
+                href: '/admin/mahasiswa',
+                icon: User,
+                description: 'Kelola data mahasiswa',
+            },
+            // Manajemen Master Data
+            {
+                title: 'Manajemen Program Studi',
+                href: '/admin/prodis',
+                icon: Database,
+                description: 'Kelola data program studi',
+            },
+            {
+                title: 'Manajemen Kategori',
+                href: '/admin/kategoris',
+                icon: Database,
+                description: 'Kelola kategori project',
+            },
+            {
+                title: 'Manajemen Teknologi',
+                href: '/admin/tools',
+                icon: Wrench,
+                description: 'Kelola teknologi yang digunakan',
+            },
+            // Manajemen Project
+            {
+                title: 'Semua Project',
+                href: '/projects',
+                icon: BookOpen,
+                description: 'Lihat & kelola semua project',
+            },
+            // Manajemen Challenge
+            {
+                title: 'Semua Challenge',
                 href: '/challenges',
                 icon: Trophy,
-                description: 'Monitor all challenges',
+                description: 'Monitor semua challenge',
             }
         );
     }
@@ -52,16 +103,28 @@ const mainNavItems = computed<NavItem[]>(() => {
     else if (user.value.role === 'dosen') {
         items.push(
             {
-                title: 'My Projects',
+                title: 'Project Saya',
                 href: '/projects',
-                icon: FileText,
-                description: 'Your portfolio projects',
+                icon: BookOpen,
+                description: 'Portfolio project penelitian/pengabdian',
             },
             {
-                title: 'My Challenges',
+                title: 'Manajemen Challenge',
                 href: '/challenges',
                 icon: Trophy,
-                description: 'Create & manage challenges',
+                description: 'Buat dan kelola kompetisi',
+            },
+            {
+                title: 'Penilaian Challenge',
+                href: '/penilaian',
+                icon: FileText,
+                description: 'Nilai submission mahasiswa',
+            },
+            {
+                title: 'Profil Dosen',
+                href: '/profile/dosen',
+                icon: GraduationCap,
+                description: 'Kelola profil akademik',
             }
         );
     }
@@ -69,16 +132,28 @@ const mainNavItems = computed<NavItem[]>(() => {
     else if (user.value.role === 'mahasiswa') {
         items.push(
             {
-                title: 'My Projects',
+                title: 'Project Saya',
                 href: '/projects',
-                icon: FileText,
-                description: 'Your portfolio projects',
+                icon: BookOpen,
+                description: 'Portfolio karya mahasiswa',
             },
             {
-                title: 'Challenges',
+                title: 'Ikuti Challenge',
                 href: '/challenges',
                 icon: Trophy,
-                description: 'Discover challenges',
+                description: 'Daftar dan kirim project ke challenge',
+            },
+            {
+                title: 'Kolaborasi',
+                href: '/kolaborasi',
+                icon: Users,
+                description: 'Kelola tim proyek',
+            },
+            {
+                title: 'Profil Mahasiswa',
+                href: '/profile/mahasiswa',
+                icon: User,
+                description: 'Kelola biodata dan skill',
             }
         );
     }
@@ -91,22 +166,12 @@ const footerNavItems = computed<NavItem[]>(() => {
 
     if (!user.value) return items;
 
-    // === SUPERADMIN FOOTER MENU ===
-    if (user.value.role === 'superadmin') {
-        items.push({
-            title: 'Admin Panel',
-            href: '/admin/users',
-            icon: Users,
-            description: 'User & system management',
-        });
-    }
-
     // Settings untuk semua user
     items.push({
-        title: 'Settings',
-        href: '/profile',
+        title: 'Pengaturan',
+        href: '/settings/profile',
         icon: Settings,
-        description: 'Profile & account settings',
+        description: 'Profil & pengaturan akun',
     });
 
     return items;

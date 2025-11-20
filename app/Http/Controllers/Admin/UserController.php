@@ -9,23 +9,47 @@ use App\Http\Controllers\Controller;
 
 class UserController extends Controller
 {
-    public function __construct()
+    public function index(Request $request)
     {
-        $this->middleware('auth');
-        $this->middleware(function ($request, $next) {
-            abort_if(!auth()->user()->isSuperAdmin(), 403);
-            return $next($request);
-        });
-    }
+        $query = User::with(['profileMahasiswa', 'profileDosen']);
 
-    public function index()
-    {
-        $users = User::with(['profileMahasiswa', 'profileDosen'])
-            ->latest()
-            ->paginate(15);
+        // Search functionality
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('username', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by role
+        if ($request->filled('role')) {
+            $query->where('role', $request->get('role'));
+        }
+
+        // Filter by status
+        if ($request->filled('status')) {
+            $status = $request->get('status');
+            $query->where('is_active', $status === 'active' ? true : false);
+        }
+
+        // Filter by registration status
+        if ($request->filled('registration')) {
+            $registration = $request->get('registration');
+            $query->where('registration_completed', $registration === 'completed' ? true : false);
+        }
+
+        $users = $query->latest()->paginate(15)->appends($request->query());
 
         return Inertia::render('Admin/Users/Index', [
             'users' => $users,
+            'filters' => [
+                'search' => $request->get('search'),
+                'role' => $request->get('role'),
+                'status' => $request->get('status'),
+                'registration' => $request->get('registration'),
+            ],
         ]);
     }
 
@@ -77,5 +101,18 @@ class UserController extends Controller
         $user->delete();
         return redirect()->route('admin.users.index')
             ->with('success', 'User deleted!');
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $validated = $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'integer|exists:users,id',
+        ]);
+
+        User::whereIn('id', $validated['ids'])->delete();
+        
+        return redirect()->route('admin.users.index')
+            ->with('success', count($validated['ids']) . ' users deleted!');
     }
 }

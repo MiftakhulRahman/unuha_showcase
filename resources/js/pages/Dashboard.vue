@@ -40,15 +40,15 @@ const roleTitle = computed(() => {
             <!-- Role-based Stats -->
             <div class="grid auto-rows-min gap-4 md:grid-cols-3">
                 <div class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900">
-                    <h3 class="text-sm font-semibold text-gray-600 dark:text-gray-400">Total Projects</h3>
+                    <h3 class="text-sm font-semibold text-gray-600 dark:text-gray-400">Total Project</h3>
                     <p class="mt-2 text-3xl font-bold">0</p>
                 </div>
                 <div class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900">
-                    <h3 class="text-sm font-semibold text-gray-600 dark:text-gray-400">Challenges</h3>
+                    <h3 class="text-sm font-semibold text-gray-600 dark:text-gray-400">Challenge</h3>
                     <p class="mt-2 text-3xl font-bold">0</p>
                 </div>
                 <div class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900">
-                    <h3 class="text-sm font-semibold text-gray-600 dark:text-gray-400">Interactions</h3>
+                    <h3 class="text-sm font-semibold text-gray-600 dark:text-gray-400">Interaksi</h3>
                     <p class="mt-2 text-3xl font-bold">0</p>
                 </div>
             </div>
@@ -60,15 +60,15 @@ const roleTitle = computed(() => {
                     <div class="p-6">
                         <h2 class="text-2xl font-bold">Dashboard Mahasiswa</h2>
                         <p class="mt-4 text-gray-600 dark:text-gray-400">
-                            Kelola project, ikuti challenges, dan showcase skills Anda di sini.
+                            Kelola project, ikuti challenge, dan tampilkan keterampilan Anda di sini.
                         </p>
                         <!-- Quick Actions -->
                         <div class="mt-6 grid gap-4 md:grid-cols-2">
                             <button class="rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600">
-                                + Upload Project Baru
+                                + Unggah Project Baru
                             </button>
                             <button class="rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800">
-                                Lihat Challenges
+                                Lihat Challenge
                             </button>
                         </div>
                     </div>
@@ -79,7 +79,7 @@ const roleTitle = computed(() => {
                     <div class="p-6">
                         <h2 class="text-2xl font-bold">Dashboard Dosen</h2>
                         <p class="mt-4 text-gray-600 dark:text-gray-400">
-                            Kelola course, buat challenges, dan monitor student progress.
+                            Kelola course, buat challenge, dan monitor progress mahasiswa.
                         </p>
                         <!-- Quick Actions -->
                         <div class="mt-6 grid gap-4 md:grid-cols-2">
@@ -96,20 +96,20 @@ const roleTitle = computed(() => {
                 <!-- Admin Dashboard -->
                 <template v-else-if="user?.role === 'superadmin'">
                     <div class="p-6">
-                        <h2 class="text-2xl font-bold">Admin Dashboard</h2>
+                        <h2 class="text-2xl font-bold">Dashboard Admin</h2>
                         <p class="mt-4 text-gray-600 dark:text-gray-400">
-                            Manage users, approve content, dan monitor platform activities.
+                            Kelola pengguna, persetujuan konten, dan monitor aktivitas platform.
                         </p>
                         <!-- Quick Actions -->
                         <div class="mt-6 grid gap-4 md:grid-cols-3">
                             <button class="rounded-lg bg-red-500 px-4 py-2 text-white hover:bg-red-600">
-                                Manage Users
+                                Kelola Pengguna
                             </button>
                             <button class="rounded-lg bg-yellow-500 px-4 py-2 text-white hover:bg-yellow-600">
-                                Moderate Content
+                                Moderasi Konten
                             </button>
                             <button class="rounded-lg border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800">
-                                View Analytics
+                                Lihat Analitik
                             </button>
                         </div>
                     </div>
@@ -119,10 +119,10 @@ const roleTitle = computed(() => {
             <!-- Recent Activity -->
             <div class="rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900">
                 <div class="border-b border-gray-200 p-6 dark:border-gray-700">
-                    <h2 class="text-xl font-bold">Recent Activity</h2>
+                    <h2 class="text-xl font-bold">Aktivitas Terbaru</h2>
                 </div>
                 <div class="p-6">
-                    <p class="text-gray-600 dark:text-gray-400">Belum ada activity terbaru</p>
+                    <p class="text-gray-600 dark:text-gray-400">Belum ada aktivitas terbaru</p>
                 </div>
             </div>
         </div>

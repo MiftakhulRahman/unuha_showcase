@@ -25,8 +25,8 @@ interface Props {
 const props = defineProps<Props>();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'My Projects', href: '/projects' },
+    { title: 'Dasbor', href: '/dashboard' },
+    { title: 'Project Saya', href: '/projects' },
 ];
 
 const getStatusColor = (status: string) => {
@@ -40,13 +40,13 @@ const getStatusColor = (status: string) => {
 </script>
 
 <template>
-    <Head title="My Projects" />
+    <Head title="Project Saya" />
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="p-4 sm:p-6">
             <!-- Header -->
             <div class="mb-8 flex items-center justify-between">
                 <div>
-                    <h1 class="text-3xl font-bold">My Projects</h1>
+                    <h1 class="text-3xl font-bold">Project Saya</h1>
                     <p class="mt-2 text-gray-600 dark:text-gray-400">
                         Kelola semua project Anda di sini
                     </p>
@@ -54,7 +54,7 @@ const getStatusColor = (status: string) => {
                 <Link href="/projects/create">
                     <Button>
                         <Plus class="mr-2 h-4 w-4" />
-                        New Project
+                        Project Baru
                     </Button>
                 </Link>
             </div>
@@ -128,15 +128,15 @@ const getStatusColor = (status: string) => {
             <div v-else class="rounded-lg border-2 border-dashed border-gray-300 p-12 text-center dark:border-gray-600">
                 <Plus class="mx-auto h-12 w-12 text-gray-400" />
                 <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-white">
-                    No projects yet
+                    Belum ada project
                 </h3>
                 <p class="mt-2 text-gray-600 dark:text-gray-400">
-                    Start by creating your first project
+                    Mulailah dengan membuat project pertama Anda
                 </p>
                 <Link href="/projects/create" class="mt-6 inline-block">
                     <Button>
                         <Plus class="mr-2 h-4 w-4" />
-                        Create First Project
+                        Buat Project Pertama
                     </Button>
                 </Link>
             </div>
