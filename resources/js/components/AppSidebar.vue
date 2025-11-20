@@ -24,34 +24,63 @@ const mainNavItems = computed<NavItem[]>(() => {
     const items: NavItem[] = [
         {
             title: 'Dashboard',
-            href: dashboard(),
+            href: dashboard().url,
             icon: LayoutGrid,
         },
     ];
 
-    if (user.value) {
-        // Menu untuk semua roles
-        items.push({
-            title: 'Explore Projects',
-            href: '#',
-            icon: BookOpen,
-        });
+    if (!user.value) return items;
 
-        // Menu khusus Mahasiswa & Dosen
-        if (user.value.role !== 'superadmin') {
-            items.push({
+    // === SUPERADMIN MENU ===
+    if (user.value.role === 'superadmin') {
+        items.push(
+            {
+                title: 'Projects',
+                href: '/projects',
+                icon: BookOpen,
+                description: 'View & manage all projects',
+            },
+            {
+                title: 'Challenges',
+                href: '/challenges',
+                icon: Trophy,
+                description: 'Monitor all challenges',
+            }
+        );
+    }
+    // === DOSEN MENU ===
+    else if (user.value.role === 'dosen') {
+        items.push(
+            {
                 title: 'My Projects',
-                href: '#',
+                href: '/projects',
                 icon: FileText,
-            });
-        }
-
-        // Menu khusus Challenges
-        items.push({
-            title: 'Challenges',
-            href: '#',
-            icon: Trophy,
-        });
+                description: 'Your portfolio projects',
+            },
+            {
+                title: 'My Challenges',
+                href: '/challenges',
+                icon: Trophy,
+                description: 'Create & manage challenges',
+            }
+        );
+    }
+    // === MAHASISWA MENU ===
+    else if (user.value.role === 'mahasiswa') {
+        items.push(
+            {
+                title: 'My Projects',
+                href: '/projects',
+                icon: FileText,
+                description: 'Your portfolio projects',
+            },
+            {
+                title: 'Challenges',
+                href: '/challenges',
+                icon: Trophy,
+                description: 'Discover challenges',
+            }
+        );
     }
 
     return items;
@@ -60,23 +89,25 @@ const mainNavItems = computed<NavItem[]>(() => {
 const footerNavItems = computed<NavItem[]>(() => {
     const items: NavItem[] = [];
 
-    if (user.value) {
-        // Admin Menu
-        if (user.value.role === 'superadmin') {
-            items.push({
-                title: 'Admin Panel',
-                href: '#',
-                icon: Users,
-            });
-        }
+    if (!user.value) return items;
 
-        // Settings
+    // === SUPERADMIN FOOTER MENU ===
+    if (user.value.role === 'superadmin') {
         items.push({
-            title: 'Settings',
-            href: '#',
-            icon: Settings,
+            title: 'Admin Panel',
+            href: '/admin/users',
+            icon: Users,
+            description: 'User & system management',
         });
     }
+
+    // Settings untuk semua user
+    items.push({
+        title: 'Settings',
+        href: '/profile',
+        icon: Settings,
+        description: 'Profile & account settings',
+    });
 
     return items;
 });
