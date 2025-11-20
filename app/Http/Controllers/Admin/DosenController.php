@@ -55,6 +55,43 @@ class DosenController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        $prodis = Prodi::where('is_active', true)->get();
+        return Inertia::render('Admin/Dosen/Create', [
+            'prodis' => $prodis,
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users',
+            'username' => 'required|string|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'is_active' => 'boolean',
+            'profile.nidn' => 'required|unique:profile_dosens,nidn',
+            'profile.prodi_id' => 'required|exists:prodis,id',
+            'profile.jabatan' => 'nullable|string|max:100',
+            'profile.bidang_keahlian' => 'nullable|string|max:255',
+        ]);
+
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'username' => $validated['username'],
+            'password' => bcrypt($validated['password']),
+            'role' => 'dosen',
+            'is_active' => $validated['is_active'] ?? true,
+        ]);
+
+        $user->profileDosen()->create($validated['profile']);
+
+        return redirect()->route('admin.dosen.index')
+            ->with('success', 'Dosen berhasil ditambahkan!');
+    }
+
     public function show(User $user)
     {
         abort_if($user->role !== 'dosen', 404);

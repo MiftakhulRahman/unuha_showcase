@@ -53,6 +53,29 @@ class UserController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        return Inertia::render('Admin/Users/Create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users',
+            'username' => 'required|string|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'role' => 'required|in:superadmin,dosen,mahasiswa',
+            'is_active' => 'boolean',
+        ]);
+
+        $validated['password'] = bcrypt($validated['password']);
+        User::create($validated);
+
+        return redirect()->route('admin.users.index')
+            ->with('success', 'User created successfully!');
+    }
+
     public function show(User $user)
     {
         return Inertia::render('Admin/Users/Show', [

@@ -85,17 +85,17 @@ const mainNavItems = computed<NavItem[]>(() => {
             },
             // Manajemen Project
             {
-                title: 'Semua Project',
-                href: '/projects',
+                title: 'Manajemen Project',
+                href: '/admin/projects',
                 icon: BookOpen,
-                description: 'Lihat & kelola semua project',
+                description: 'Kelola & moderasi semua project',
             },
             // Manajemen Challenge
             {
-                title: 'Semua Challenge',
-                href: '/challenges',
+                title: 'Manajemen Challenge',
+                href: '/admin/challenges',
                 icon: Trophy,
-                description: 'Monitor semua challenge',
+                description: 'Monitor & kelola semua challenge',
             }
         );
     }

@@ -100,13 +100,16 @@ const filterOptions = [
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="space-y-6 p-4 sm:p-6">
             <!-- Header -->
-            <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+            <div class="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
                 <div>
                     <h1 class="text-3xl font-bold">Manajemen Pengguna</h1>
                     <p class="mt-2 text-gray-600 dark:text-gray-400">
                         Kelola semua pengguna dalam sistem
                     </p>
                 </div>
+                <Link href="/admin/users/create" as="button">
+                    <Button>+ Tambah Pengguna</Button>
+                </Link>
             </div>
 
             <!-- Filter & Search -->

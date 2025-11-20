@@ -30,6 +30,29 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // Admin Routes (Superadmin Only)
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+    // Route model binding for nested resources
+    Route::bind('dosen', function ($value) {
+        return \App\Models\User::findOrFail($value);
+    });
+    Route::bind('mahasiswa', function ($value) {
+        return \App\Models\User::findOrFail($value);
+    });
+    Route::bind('prodi', function ($value) {
+        return \App\Models\Prodi::findOrFail($value);
+    });
+    Route::bind('kategori', function ($value) {
+        return \App\Models\Kategori::findOrFail($value);
+    });
+    Route::bind('tool', function ($value) {
+        return \App\Models\Tool::findOrFail($value);
+    });
+    Route::bind('project', function ($value) {
+        return \App\Models\Project::findOrFail($value);
+    });
+    Route::bind('challenge', function ($value) {
+        return \App\Models\Challenge::findOrFail($value);
+    });
+
     Route::middleware('admin.superadmin')->group(function () {
         Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
         Route::post('users/{user}/toggle-status', [\App\Http\Controllers\Admin\UserController::class, 'toggleStatus'])->name('users.toggleStatus');
@@ -50,6 +73,12 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         
         Route::resource('prodis', \App\Http\Controllers\Admin\ProdiController::class);
         Route::post('prodis/bulk-delete', [\App\Http\Controllers\Admin\ProdiController::class, 'bulkDelete'])->name('prodis.bulkDelete');
+        
+        Route::resource('projects', \App\Http\Controllers\Admin\ProjectController::class, ['except' => ['create', 'store']]);
+        Route::post('projects/bulk-delete', [\App\Http\Controllers\Admin\ProjectController::class, 'bulkDelete'])->name('projects.bulkDelete');
+        
+        Route::resource('challenges', \App\Http\Controllers\Admin\ChallengeController::class, ['except' => ['create', 'store']]);
+        Route::post('challenges/bulk-delete', [\App\Http\Controllers\Admin\ChallengeController::class, 'bulkDelete'])->name('challenges.bulkDelete');
     });
 });
 

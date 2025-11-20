@@ -97,11 +97,16 @@ const filterOptions = [
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="space-y-6 p-4 sm:p-6">
             <!-- Header -->
-            <div>
-                <h1 class="text-3xl font-bold">Manajemen Mahasiswa</h1>
-                <p class="mt-2 text-gray-600 dark:text-gray-400">
-                    Kelola data semua mahasiswa dalam sistem
-                </p>
+            <div class="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+                <div>
+                    <h1 class="text-3xl font-bold">Manajemen Mahasiswa</h1>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400">
+                        Kelola data semua mahasiswa dalam sistem
+                    </p>
+                </div>
+                <Link href="/admin/mahasiswa/create" as="button">
+                    <Button>+ Tambah Mahasiswa</Button>
+                </Link>
             </div>
 
             <!-- Filter & Search -->

@@ -63,6 +63,43 @@ class MahasiswaController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        $prodis = Prodi::where('is_active', true)->get();
+        return Inertia::render('Admin/Mahasiswa/Create', [
+            'prodis' => $prodis,
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users',
+            'username' => 'required|string|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'is_active' => 'boolean',
+            'profile.nim' => 'required|unique:profile_mahasiswas,nim',
+            'profile.prodi_id' => 'required|exists:prodis,id',
+            'profile.angkatan' => 'required|integer|min:2000|max:2999',
+            'profile.semester' => 'required|integer|min:1|max:8',
+        ]);
+
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'username' => $validated['username'],
+            'password' => bcrypt($validated['password']),
+            'role' => 'mahasiswa',
+            'is_active' => $validated['is_active'] ?? true,
+        ]);
+
+        $user->profileMahasiswa()->create($validated['profile']);
+
+        return redirect()->route('admin.mahasiswa.index')
+            ->with('success', 'Mahasiswa berhasil ditambahkan!');
+    }
+
     public function show(User $user)
     {
         abort_if($user->role !== 'mahasiswa', 404);
