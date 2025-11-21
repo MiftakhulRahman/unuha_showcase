@@ -4,7 +4,13 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
+import { Toaster } from 'vue-sonner';
 import { initializeTheme } from './composables/useAppearance';
+
+// PrimeVue imports
+import PrimeVue from 'primevue/config';
+import Aura from '@primevue/themes/aura';
+import 'primeicons/primeicons.css';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -16,9 +22,29 @@ createInertiaApp({
             import.meta.glob<DefineComponent>('./pages/**/*.vue'),
         ),
     setup({ el, App, props, plugin }) {
-        createApp({ render: () => h(App, props) })
-            .use(plugin)
-            .mount(el);
+        const app = createApp({
+            render: () =>
+                h('div', [
+                    h(App, props),
+                    h(Toaster, {
+                        position: 'top-right',
+                        richColors: true,
+                        closeButton: true,
+                    }),
+                ]),
+        });
+        
+        // Use PrimeVue with Aura theme
+        app.use(PrimeVue, {
+            theme: {
+                preset: Aura,
+                options: {
+                    darkModeSelector: '.dark',
+                }
+            }
+        });
+        
+        app.use(plugin).mount(el);
     },
     progress: {
         color: '#4B5563',

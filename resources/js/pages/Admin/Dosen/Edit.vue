@@ -4,6 +4,7 @@ import { Head, useForm, Link } from '@inertiajs/vue3';
 import { type BreadcrumbItem } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useToast } from '@/composables/useToast';
 
 interface Prodi {
     id: number;
@@ -52,10 +53,16 @@ const form = useForm({
     },
 });
 
+const toast = useToast();
+
 const submit = () => {
     form.put(`/admin/dosen/${props.dosen.id}`, {
+        preserveScroll: true,
         onSuccess: () => {
-            form.reset();
+            toast.updateSuccess('Dosen');
+        },
+        onError: () => {
+            toast.operationFailed('Gagal memperbarui dosen. Periksa kembali data yang dimasukkan.');
         },
     });
 };

@@ -4,6 +4,7 @@ import { Head, Link } from '@inertiajs/vue3';
 import { type BreadcrumbItem } from '@/types';
 import AdminDataTable from '@/components/AdminDataTable.vue';
 import AdminFilterBar from '@/components/AdminFilterBar.vue';
+import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-vue-next';
 
@@ -29,8 +30,6 @@ interface Props {
 const props = defineProps<Props>();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Admin', href: '/admin' },
     { title: 'Tools/Teknologi', href: '/admin/tools' },
 ];
 
@@ -62,47 +61,61 @@ const filterOptions = [
 
 <template>
     <Head title="Manajemen Tools/Teknologi" />
-    <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="space-y-6 p-4 sm:p-6">
-            <!-- Header -->
-            <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                <div>
-                    <h1 class="text-3xl font-bold">Manajemen Tools/Teknologi</h1>
-                    <p class="mt-2 text-gray-600 dark:text-gray-400">
-                        Kelola semua tools dan teknologi dalam sistem
-                    </p>
+    <AppLayout>
+        <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-950 dark:to-gray-900">
+            <div class="mx-auto max-w-7xl space-y-6 p-6">
+                <!-- Breadcrumb -->
+                <div class="flex items-center justify-between">
+                    <Breadcrumbs :breadcrumbs="breadcrumbs" />
                 </div>
-                <Link href="/admin/tools/create">
-                    <Button>
-                        <Plus class="mr-2 h-4 w-4" />
-                        Tambah Tool
-                    </Button>
-                </Link>
+
+                <!-- Header Card -->
+                <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+                    <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+                        <div class="space-y-1.5">
+                            <h1 class="text-2xl font-bold tracking-tight">Manajemen Tools/Teknologi</h1>
+                            <p class="text-sm text-muted-foreground">
+                                Kelola semua tools dan teknologi dalam sistem
+                            </p>
+                        </div>
+                        <Link href="/admin/tools/create">
+                            <Button size="default" class="gap-2">
+                                <Plus class="h-4 w-4" />
+                                Tambah Tool
+                            </Button>
+                        </Link>
+                    </div>
+
+                    <!-- Filter & Search -->
+                    <div class="mt-6">
+                        <AdminFilterBar
+                            :filters="filterOptions"
+                            :current-filters="filters"
+                            search-placeholder="Cari nama atau slug tool..."
+                        />
+                    </div>
+                </div>
+
+                <!-- Data Table Card -->
+                <div class="rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+                    <AdminDataTable
+                        title=""
+                        :columns="columns"
+                        :data="tools.data"
+                        :links="tools.links"
+                        bulk-delete-route="/admin/tools/bulk-delete"
+                        edit-route="/admin/tools"
+                        delete-route="/admin/tools"
+                    >
+                        <template #cell-is_active="{ item }">
+                            <span :class="['inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium', getStatusBadge(item.is_active)]">
+                                {{ item.is_active ? 'Aktif' : 'Tidak Aktif' }}
+                            </span>
+                        </template>
+                    </AdminDataTable>
+                </div>
             </div>
-
-            <!-- Filter & Search -->
-            <AdminFilterBar
-                :filters="filterOptions"
-                :current-filters="filters"
-                search-placeholder="Cari nama atau slug tool..."
-            />
-
-            <!-- Data Table -->
-            <AdminDataTable
-                title=""
-                :columns="columns"
-                :data="tools.data"
-                :links="tools.links"
-                bulk-delete-route="/admin/tools/bulk-delete"
-                edit-route="/admin/tools"
-                delete-route="/admin/tools"
-            >
-                <template #cell-is_active="{ item }">
-                    <span :class="['inline-block rounded-full px-3 py-1 text-xs font-semibold', getStatusBadge(item.is_active)]">
-                        {{ item.is_active ? 'Aktif' : 'Tidak Aktif' }}
-                    </span>
-                </template>
-            </AdminDataTable>
         </div>
     </AppLayout>
 </template>
+

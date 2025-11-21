@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import { type BreadcrumbItem } from '@/types';
 import AdminDataTable from '@/components/AdminDataTable.vue';
-import AdminFilterBar from '@/components/AdminFilterBar.vue';
+import Breadcrumbs from '@/components/Breadcrumbs.vue';
+import Button from 'primevue/button'; // Use PrimeVue button for consistency
 
 interface Dosen {
     id: number;
@@ -27,10 +28,12 @@ interface Prodi {
     kode: string;
 }
 
+// Updated Props interface to include meta for pagination
 interface Props {
     dosen: {
         data: Dosen[];
         links: any;
+        meta: any; // Added for PrimeVue DataTable pagination
     };
     prodis: Prodi[];
     filters: {
@@ -43,86 +46,60 @@ interface Props {
 const props = defineProps<Props>();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Admin', href: '/admin' },
     { title: 'Dosen', href: '/admin/dosen' },
 ];
 
 const columns = [
-    { key: 'name', label: 'Nama' },
-    { key: 'email', label: 'Email' },
-    { key: 'profile_dosen.nidn', label: 'NIDN' },
-    { key: 'profile_dosen.prodi.nama', label: 'Prodi' },
-    { key: 'is_active', label: 'Status' },
+    { key: 'name', label: 'Nama', sortable: true },
+    { key: 'email', label: 'Email', sortable: true },
+    { key: 'profile_dosen.nidn', label: 'NIDN', sortable: true },
+    { key: 'profile_dosen.prodi.nama', label: 'Prodi', sortable: true },
+    { key: 'is_active', label: 'Status', sortable: true },
 ];
 
-const getStatusBadge = (isActive: boolean) => {
-    return isActive
-        ? 'bg-green-100 text-green-800 dark:bg-green-900'
-        : 'bg-red-100 text-red-800 dark:bg-red-900';
-};
-
-const filterOptions = [
-    {
-        key: 'prodi_id',
-        label: 'Program Studi',
-        type: 'select' as const,
-        placeholder: 'Semua Prodi',
-        options: props.prodis.map((p) => ({ label: p.nama, value: p.id })),
-    },
-    {
-        key: 'status',
-        label: 'Status',
-        type: 'select' as const,
-        placeholder: 'Semua Status',
-        options: [
-            { label: 'Aktif', value: 'active' },
-            { label: 'Tidak Aktif', value: 'inactive' },
-        ],
-    },
-];
 </script>
 
 <template>
     <Head title="Manajemen Dosen" />
-    <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="space-y-6 p-4 sm:p-6">
-            <!-- Header -->
-            <div class="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-                <div>
-                    <h1 class="text-3xl font-bold">Manajemen Dosen</h1>
-                    <p class="mt-2 text-gray-600 dark:text-gray-400">
-                        Kelola data semua dosen dalam sistem
-                    </p>
-                </div>
-                <Link href="/admin/dosen/create" as="button">
-                    <Button>+ Tambah Dosen</Button>
-                </Link>
+    <AppLayout>
+        <!-- The main content area -->
+        <div class="p-6">
+            <div class="flex items-center justify-between">
+                <Breadcrumbs :breadcrumbs="breadcrumbs" />
             </div>
 
-            <!-- Filter & Search -->
-            <AdminFilterBar
-                :filters="filterOptions"
-                :current-filters="filters"
-                search-placeholder="Cari nama, email, NIDN..."
-            />
+            <div class="mt-4">
+                <div class="mb-6 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+                    <div class="space-y-1.5">
+                        <h1 class="text-2xl font-bold tracking-tight">Manajemen Dosen</h1>
+                        <p class="text-sm text-muted-foreground">
+                            Kelola data semua dosen dalam sistem.
+                        </p>
+                    </div>
+                    <Link href="/admin/dosen/create">
+                        <Button label="Tambah Dosen" icon="pi pi-plus" />
+                    </Link>
+                </div>
 
-            <!-- Data Table -->
-            <AdminDataTable
-                title=""
-                :columns="columns"
-                :data="dosen.data"
-                :links="dosen.links"
-                bulk-delete-route="/admin/dosen/bulk-delete"
-                edit-route="/admin/dosen"
-                delete-route="/admin/dosen"
-            >
-                <template #cell-is_active="{ item }">
-                    <span :class="['inline-block rounded-full px-3 py-1 text-xs font-semibold', getStatusBadge(item.is_active)]">
-                        {{ item.is_active ? 'Aktif' : 'Tidak Aktif' }}
-                    </span>
-                </template>
-            </AdminDataTable>
+                <!-- The new PrimeVue DataTable replaces the old structure -->
+                <AdminDataTable
+                    :columns="columns"
+                    :data="props.dosen.data"
+                    :meta="props.dosen.meta"
+                    bulk-delete-route="/admin/dosen/bulk-delete"
+                    edit-route="/admin/dosen"
+                    delete-route="/admin/dosen"
+                >
+                    <!--
+                        You can still use slots if you need custom rendering beyond the default.
+                        The 'is_active' status is now handled automatically by AdminDataTable.
+                        Example:
+                    -->
+                    <!-- <template #cell-name="{ item }">
+                        <span class="font-bold">{{ item.name }}</span>
+                    </template> -->
+                </AdminDataTable>
+            </div>
         </div>
     </AppLayout>
 </template>

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import UserInfo from '@/components/UserInfo.vue';
 import {
     DropdownMenu,
@@ -9,20 +8,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import UserMenuContent from '@/components/UserMenuContent.vue';
-import { home } from '@/routes';
-import type { BreadcrumbItemType } from '@/types';
 import { usePage } from '@inertiajs/vue3';
 import { ChevronDown } from 'lucide-vue-next';
 import { computed } from 'vue';
-
-withDefaults(
-    defineProps<{
-        breadcrumbs?: BreadcrumbItemType[];
-    }>(),
-    {
-        breadcrumbs: () => [],
-    },
-);
 
 const page = usePage();
 const auth = computed(() => page.props.auth);
@@ -34,9 +22,6 @@ const auth = computed(() => page.props.auth);
     >
         <div class="flex items-center gap-2 flex-1">
             <SidebarTrigger class="-ml-1" />
-            <template v-if="breadcrumbs && breadcrumbs.length > 0">
-                <Breadcrumbs :breadcrumbs="breadcrumbs" />
-            </template>
         </div>
         
         <div class="ml-auto">

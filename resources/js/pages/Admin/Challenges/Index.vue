@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import { type BreadcrumbItem } from '@/types';
 import AdminDataTable from '@/components/AdminDataTable.vue';
 import AdminFilterBar from '@/components/AdminFilterBar.vue';
+import Breadcrumbs from '@/components/Breadcrumbs.vue';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-vue-next';
 
 interface Challenge {
     id: number;
@@ -30,9 +33,7 @@ interface Props {
 const props = defineProps<Props>();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Dashboard', href: '/dashboard' },
-    { title: 'Admin', href: '/admin' },
-    { title: 'Manajemen Challenge', href: '/admin/challenges' },
+    { title: 'Challenge', href: '/admin/challenges' },
 ];
 
 const columns = [
@@ -67,47 +68,61 @@ const getStatusBadge = (status: string) => {
 
 <template>
     <Head title="Manajemen Challenge" />
-    <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="space-y-6 p-4 sm:p-6">
-            <!-- Header -->
-            <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                <div>
-                    <h1 class="text-3xl font-bold">Manajemen Challenge</h1>
-                    <p class="mt-2 text-gray-600 dark:text-gray-400">
-                        Pantau, edit, atau batalkan challenge yang dibuat oleh dosen dengan akses penuh
-                    </p>
+    <AppLayout>
+        <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-950 dark:to-gray-900">
+            <div class="mx-auto max-w-7xl space-y-6 p-6">
+                <!-- Breadcrumb -->
+                <div class="flex items-center justify-between">
+                    <Breadcrumbs :breadcrumbs="breadcrumbs" />
+                </div>
+
+                <!-- Header Card -->
+                <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
+                    <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+                        <div class="space-y-1.5">
+                            <h1 class="text-2xl font-bold tracking-tight">Manajemen Challenge</h1>
+                            <p class="text-sm text-muted-foreground">
+                                Pantau, edit, atau batalkan challenge yang dibuat oleh dosen
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Filter & Search -->
+                    <div class="mt-6">
+                        <AdminFilterBar
+                            :filters="filterOptions"
+                            :current-filters="filters"
+                            search-placeholder="Cari judul challenge atau pembuat (dosen)..."
+                        />
+                    </div>
+                </div>
+
+                <!-- Data Table Card -->
+                <div class="rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+                    <AdminDataTable
+                        title=""
+                        :columns="columns"
+                        :data="challenges.data"
+                        :links="challenges.links"
+                        bulk-delete-route="/admin/challenges/bulk-delete"
+                        edit-route="/admin/challenges"
+                        delete-route="/admin/challenges"
+                    >
+                        <template #cell-status="{ item }">
+                            <span :class="['inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium', getStatusBadge(item.status)]">
+                                {{ item.status.charAt(0).toUpperCase() + item.status.slice(1) }}
+                            </span>
+                        </template>
+                        <template #cell-start_date="{ item }">
+                            {{ new Date(item.start_date).toLocaleDateString('id-ID') }}
+                        </template>
+                        <template #cell-end_date="{ item }">
+                            {{ new Date(item.end_date).toLocaleDateString('id-ID') }}
+                        </template>
+                    </AdminDataTable>
                 </div>
             </div>
-
-            <!-- Filter & Search -->
-            <AdminFilterBar
-                :filters="filterOptions"
-                :current-filters="filters"
-                search-placeholder="Cari judul challenge atau pembuat (dosen)..."
-            />
-
-            <!-- Data Table -->
-            <AdminDataTable
-                title=""
-                :columns="columns"
-                :data="challenges.data"
-                :links="challenges.links"
-                bulk-delete-route="/admin/challenges/bulk-delete"
-                edit-route="/admin/challenges"
-                delete-route="/admin/challenges"
-            >
-                <template #cell-status="{ item }">
-                    <span :class="['inline-block rounded-full px-3 py-1 text-xs font-semibold', getStatusBadge(item.status)]">
-                        {{ item.status.charAt(0).toUpperCase() + item.status.slice(1) }}
-                    </span>
-                </template>
-                <template #cell-start_date="{ item }">
-                    {{ new Date(item.start_date).toLocaleDateString('id-ID') }}
-                </template>
-                <template #cell-end_date="{ item }">
-                    {{ new Date(item.end_date).toLocaleDateString('id-ID') }}
-                </template>
-            </AdminDataTable>
         </div>
     </AppLayout>
 </template>
+
