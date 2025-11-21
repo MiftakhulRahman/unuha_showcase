@@ -121,10 +121,10 @@ const handleImport = async (event: any) => {
     router.post(props.importRoute, formData, {
         preserveScroll: true,
         onSuccess: () => {
-            toast.createSuccess('File imported');
+            toast.createSuccess('File diimpor');
         },
         onError: () => {
-            toast.operationFailed('Gagal mengimport file');
+            toast.operationFailed('Gagal mengimpor file');
         },
     });
 };
@@ -138,18 +138,26 @@ const openNew = () => {
 
 <template>
     <div class="card p-4">
+        <!-- Title and Description moved above Toolbar -->
+        <div v-if="title || description" class="mb-4">
+            <h4 v-if="title" class="m-0 text-xl font-semibold">{{ title }}</h4>
+            <p v-if="description" class="m-0 mt-1 text-sm text-gray-600 dark:text-gray-400">{{ description }}</p>
+        </div>
+
         <Toolbar class="mb-6">
             <template #start>
-                <Button 
-                    v-if="createRoute"
-                    label="New" 
-                    icon="pi pi-plus" 
-                    class="mr-2" 
-                    @click="openNew" 
-                />
+                <slot name="toolbar-start">
+                    <Button 
+                        v-if="createRoute"
+                        label="Tambah" 
+                        icon="pi pi-plus" 
+                        class="mr-2" 
+                        @click="openNew" 
+                    />
+                </slot>
                 <Button 
                     v-if="bulkDeleteRoute"
-                    label="Delete" 
+                    label="Hapus" 
                     icon="pi pi-trash" 
                     severity="danger" 
                     variant="outlined" 
@@ -164,9 +172,9 @@ const openNew = () => {
                     mode="basic" 
                     :accept="importAccept" 
                     :maxFileSize="1000000" 
-                    label="Import" 
+                    label="Impor" 
                     customUpload 
-                    chooseLabel="Import" 
+                    chooseLabel="Impor" 
                     class="mr-2" 
                     auto 
                     :chooseButtonProps="{ severity: 'secondary' }" 
@@ -174,7 +182,7 @@ const openNew = () => {
                 />
                 <Button 
                     v-if="exportable"
-                    label="Export" 
+                    label="Ekspor" 
                     icon="pi pi-upload" 
                     severity="secondary" 
                     @click="exportCSV" 
@@ -192,18 +200,17 @@ const openNew = () => {
             :filters="filters"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             :rowsPerPageOptions="[5, 10, 25]"
-            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            currentPageReportTemplate="Menampilkan {first} sampai {last} dari {totalRecords} entri"
             :globalFilterFields="columns.map(c => c.field)"
             tableStyle="min-width: 50rem"
         >
             <template #header>
-                <div class="flex flex-wrap gap-2 items-center justify-between">
-                    <h4 class="m-0">{{ title || 'Manage Data' }}</h4>
+                <div class="flex flex-wrap gap-2 items-center justify-end">
                     <IconField>
                         <InputIcon>
                             <i class="pi pi-search" />
                         </InputIcon>
-                        <InputText v-model="filters['global'].value" placeholder="Search..." />
+                        <InputText v-model="filters['global'].value" placeholder="Cari..." />
                     </IconField>
                 </div>
             </template>
@@ -225,7 +232,7 @@ const openNew = () => {
                 </template>
             </Column>
 
-            <Column v-if="editRoute || deleteRoute" :exportable="false" style="min-width: 12rem">
+            <Column v-if="editRoute || deleteRoute || $slots.actions" :exportable="false" style="min-width: 12rem" header="Aksi">
                 <template #body="slotProps">
                     <Button 
                         v-if="editRoute"
@@ -235,6 +242,7 @@ const openNew = () => {
                         class="mr-2" 
                         @click="router.visit(`${editRoute}/${slotProps.data.id}/edit`)" 
                     />
+                    <slot name="actions" :item="slotProps.data" />
                     <Button 
                         v-if="deleteRoute"
                         icon="pi pi-trash" 
@@ -243,7 +251,6 @@ const openNew = () => {
                         severity="danger" 
                         @click="confirmDelete(slotProps.data)" 
                     />
-                    <slot name="actions" :item="slotProps.data" />
                 </template>
             </Column>
         </DataTable>
@@ -251,10 +258,10 @@ const openNew = () => {
         <!-- Delete Confirmation Dialog -->
         <ConfirmDialog
             v-model:open="showDeleteDialog"
-            title="Delete Data"
-            description="Are you sure you want to delete this item? This action cannot be undone."
-            confirm-text="Yes, Delete"
-            cancel-text="Cancel"
+            title="Hapus Data"
+            description="Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan."
+            confirm-text="Ya, Hapus"
+            cancel-text="Batal"
             variant="destructive"
             icon="delete"
             @confirm="handleDelete"
@@ -263,10 +270,10 @@ const openNew = () => {
         <!-- Bulk Delete Confirmation Dialog -->
         <ConfirmDialog
             v-model:open="showBulkDeleteDialog"
-            title="Delete Selected Data"
-            :description="`Are you sure you want to delete ${selectedItems.length} selected items? This action cannot be undone.`"
-            confirm-text="Yes, Delete All"
-            cancel-text="Cancel"
+            title="Hapus Data Terpilih"
+            :description="`Apakah Anda yakin ingin menghapus ${selectedItems.length} data yang dipilih? Tindakan ini tidak dapat dibatalkan.`"
+            confirm-text="Ya, Hapus Semua"
+            cancel-text="Batal"
             variant="destructive"
             icon="delete"
             @confirm="handleBulkDelete"

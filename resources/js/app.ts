@@ -4,12 +4,13 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
-import { Toaster } from 'vue-sonner';
 import { initializeTheme } from './composables/useAppearance';
 
 // PrimeVue imports
 import PrimeVue from 'primevue/config';
 import Aura from '@primevue/themes/aura';
+import ToastService from 'primevue/toastservice';
+import Toast from 'primevue/toast';
 import 'primeicons/primeicons.css';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
@@ -26,11 +27,7 @@ createInertiaApp({
             render: () =>
                 h('div', [
                     h(App, props),
-                    h(Toaster, {
-                        position: 'top-right',
-                        richColors: true,
-                        closeButton: true,
-                    }),
+                    h(Toast),
                 ]),
         });
         
@@ -43,6 +40,8 @@ createInertiaApp({
                 }
             }
         });
+
+        app.use(ToastService);
         
         app.use(plugin).mount(el);
     },

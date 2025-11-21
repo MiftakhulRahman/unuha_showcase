@@ -73,7 +73,7 @@ class UserController extends Controller
         User::create($validated);
 
         return redirect()->route('admin.users.index')
-            ->with('success', 'User created successfully!');
+            ->with('success', 'Pengguna berhasil ditambahkan.');
     }
 
     public function show(User $user)
@@ -102,28 +102,28 @@ class UserController extends Controller
 
         $user->update($validated);
 
-        return redirect()->route('admin.users.show', $user)
-            ->with('success', 'User updated successfully!');
+        return redirect()->route('admin.users.index')
+            ->with('success', 'Pengguna berhasil diperbarui.');
     }
 
     public function resetPassword(User $user)
     {
         $tempPassword = \Str::random(12);
         $user->update(['password' => bcrypt($tempPassword)]);
-        return back()->with('success', "Password reset. Temp password: $tempPassword");
+        return back()->with('success', "Password direset. Password sementara: $tempPassword");
     }
 
     public function toggleStatus(User $user)
     {
         $user->update(['is_active' => !$user->is_active]);
-        return back()->with('success', 'User status updated!');
+        return back()->with('success', 'Status pengguna diperbarui.');
     }
 
     public function destroy(User $user)
     {
         $user->delete();
         return redirect()->route('admin.users.index')
-            ->with('success', 'User deleted!');
+            ->with('success', 'Pengguna berhasil dihapus.');
     }
 
     public function bulkDelete(Request $request)
@@ -136,6 +136,6 @@ class UserController extends Controller
         User::whereIn('id', $validated['ids'])->delete();
         
         return redirect()->route('admin.users.index')
-            ->with('success', count($validated['ids']) . ' users deleted!');
+            ->with('success', count($validated['ids']) . ' pengguna berhasil dihapus.');
     }
 }

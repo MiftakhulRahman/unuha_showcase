@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue';
 import { router } from '@inertiajs/vue3';
 import { useToast } from '@/composables/useToast';
-import { FilterMatchMode } from 'primevue/api';
+import { FilterMatchMode } from '@primevue/core/api';
 
 // PrimeVue Components
 import DataTable, { type DataTablePageEvent } from 'primevue/datatable';

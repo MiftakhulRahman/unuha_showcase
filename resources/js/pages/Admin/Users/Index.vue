@@ -5,6 +5,11 @@ import { type BreadcrumbItem } from '@/types';
 import PrimeDataTable from '@/components/PrimeDataTable.vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
 import Tag from 'primevue/tag';
+import Dialog from 'primevue/dialog';
+import Button from 'primevue/button';
+import { ref } from 'vue';
+import CreateUserForm from './Partials/CreateUserForm.vue';
+import EditUserForm from './Partials/EditUserForm.vue';
 
 interface User {
     id: number;
@@ -53,6 +58,26 @@ const getRoleSeverity = (role: string) => {
 const getStatusSeverity = (isActive: boolean) => {
     return isActive ? 'success' : 'danger';
 };
+
+// Modal State
+const showCreateModal = ref(false);
+const showEditModal = ref(false);
+const selectedUser = ref<User | null>(null);
+
+const openCreateModal = () => {
+    showCreateModal.value = true;
+};
+
+const openEditModal = (user: User) => {
+    selectedUser.value = user;
+    showEditModal.value = true;
+};
+
+const closeModals = () => {
+    showCreateModal.value = false;
+    showEditModal.value = false;
+    selectedUser.value = null;
+};
 </script>
 
 <template>
@@ -71,12 +96,20 @@ const getStatusSeverity = (isActive: boolean) => {
                         :totalRecords="users.meta?.total"
                         title="Manajemen Pengguna"
                         description="Kelola semua pengguna dalam sistem"
-                        create-route="/admin/users/create"
-                        edit-route="/admin/users"
                         delete-route="/admin/users"
                         bulk-delete-route="/admin/users/bulk-delete"
                         :exportable="true"
                     >
+                        <!-- Custom Toolbar Actions -->
+                        <template #toolbar-start>
+                            <Button 
+                                label="Tambah" 
+                                icon="pi pi-plus" 
+                                class="mr-2" 
+                                @click="openCreateModal" 
+                            />
+                        </template>
+
                         <template #cell-role="{ item }">
                             <Tag :value="item.role" :severity="getRoleSeverity(item.role)" />
                         </template>
@@ -87,9 +120,45 @@ const getStatusSeverity = (isActive: boolean) => {
                                 :severity="getStatusSeverity(item.is_active)" 
                             />
                         </template>
+
+                        <template #actions="{ item }">
+                            <Button 
+                                icon="pi pi-pencil" 
+                                variant="outlined" 
+                                rounded 
+                                class="mr-2" 
+                                @click="openEditModal(item)" 
+                            />
+                        </template>
                     </PrimeDataTable>
                 </div>
             </div>
         </div>
+
+        <!-- Create Modal -->
+        <Dialog 
+            v-model:visible="showCreateModal" 
+            modal 
+            header="Tambah Pengguna Baru" 
+            :style="{ width: '30rem' }"
+            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+        >
+            <CreateUserForm @close="closeModals" />
+        </Dialog>
+
+        <!-- Edit Modal -->
+        <Dialog 
+            v-model:visible="showEditModal" 
+            modal 
+            header="Edit Pengguna" 
+            :style="{ width: '30rem' }"
+            :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+        >
+            <EditUserForm 
+                v-if="selectedUser" 
+                :user="selectedUser" 
+                @close="closeModals" 
+            />
+        </Dialog>
     </AppLayout>
 </template>
