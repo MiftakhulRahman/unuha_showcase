@@ -260,7 +260,7 @@ const openNew = () => {
         <Toast position="top-right" />
         <!-- Title and Description moved above Toolbar -->
         <div v-if="title || description" class="mb-4">
-            <h4 v-if="title" class="m-0 text-xl font-semibold">{{ title }}</h4>
+            <h4 v-if="title" class="m-0 text-2xl font-semibold tracking-tight" style="font-weight: 600 !important;">{{ title }}</h4>
             <p v-if="description" class="m-0 mt-1 text-sm text-gray-600 dark:text-gray-400">{{ description }}</p>
         </div>
 

@@ -28,7 +28,7 @@ const page = usePage();
             v-if="group.label"
             class="
                 uppercase 
-                text-[10px] 
+                text-xs 
                 tracking-wider 
                 text-muted-foreground
                 group-data-[collapsible=icon]:!opacity-100 

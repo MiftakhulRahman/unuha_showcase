@@ -102,13 +102,14 @@ const closeModals = () => {
 <template>
     <Head title="Manajemen Pengguna" />
     <AppLayout>
-        <div class="min-h-screen">
-            <div class="mx-auto max-w-7xl space-y-6 p-6">
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-6">
                 <!-- Breadcrumb -->
                 <Breadcrumbs :breadcrumbs="breadcrumbs" />
+            </div>
 
-                <!-- Data Table with Integrated Header -->
-                <div class="rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+            <!-- Data Table with Integrated Header -->
+            <div class="rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
                     <PrimeDataTable
                         :columns="columns"
                         :data="users.data"
@@ -159,7 +160,7 @@ const closeModals = () => {
                     </PrimeDataTable>
                 </div>
             </div>
-        </div>
+
 
         <!-- Create Modal -->
         <Dialog 
