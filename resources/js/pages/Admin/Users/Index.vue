@@ -122,22 +122,28 @@ const closeModals = () => {
                         <!-- Custom Toolbar Actions -->
                         <template #toolbar-start>
                             <Button 
-                                label="Tambah" 
+                                label="Tambah"
                                 icon="pi pi-plus" 
-                                class="mr-2" 
+                                class="mr-2 responsive-label" 
                                 @click="openCreateModal" 
                             />
                         </template>
 
                         <template #cell-role="{ item }">
-                            <Tag :value="item.role" :severity="getRoleSeverity(item.role)" class="font-semibold" />
+                            <Tag 
+                                :value="item.role" 
+                                :severity="getRoleSeverity(item.role)" 
+                                class="custom-badge"
+                                style="font-weight: 600 !important;" 
+                            />
                         </template>
 
                         <template #cell-is_active="{ item }">
                             <Tag 
                                 :value="item.is_active ? 'Aktif' : 'Tidak Aktif'" 
                                 :severity="getStatusSeverity(item.is_active)" 
-                                class="font-semibold"
+                                class="custom-badge"
+                                style="font-weight: 600 !important;"
                             />
                         </template>
 
@@ -182,3 +188,25 @@ const closeModals = () => {
         </Dialog>
     </AppLayout>
 </template>
+
+<style scoped>
+/* Hide label on mobile for Button with responsive-label class */
+:deep(.responsive-label .p-button-label) {
+    display: none;
+}
+
+@media (min-width: 640px) {
+    :deep(.responsive-label .p-button-label) {
+        display: block;
+    }
+}
+
+/* Nuclear option for Badge Font Weight */
+:deep(.custom-badge),
+:deep(.custom-badge .p-tag-value),
+:deep(.p-tag.custom-badge),
+:deep(.p-tag.custom-badge span) {
+    font-weight: 600 !important; /* Try Semibold (600) or Extra Bold (800) - User said 700 system was too thick, Outfit 700 was too thin. Let's try 600 first, if too thin, we go 800. Actually, let's go with a specific weight that might work better. */
+    font-family: 'Outfit', sans-serif !important;
+}
+</style>

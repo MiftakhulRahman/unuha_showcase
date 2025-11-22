@@ -277,12 +277,13 @@ const openNew = () => {
                 </slot>
                 <Button 
                     v-if="bulkDeleteRoute"
-                    label="Hapus" 
+                    label="Hapus"
                     icon="pi pi-trash" 
                     severity="danger" 
                     variant="outlined" 
                     @click="confirmBulkDelete" 
-                    :disabled="!selectedItems || !selectedItems.length" 
+                    :disabled="!selectedItems || !selectedItems.length"
+                    class="responsive-label" 
                 />
             </template>
 
@@ -307,6 +308,7 @@ const openNew = () => {
                     severity="secondary" 
                     :model="exportItems"
                     @click="exportCSV"
+                    class="responsive-label"
                 />
             </template>
         </Toolbar>
@@ -484,3 +486,16 @@ const openNew = () => {
         />
     </div>
 </template>
+
+<style scoped>
+/* Hide label on mobile for SplitButton with responsive-label class */
+:deep(.responsive-label .p-button-label) {
+    display: none;
+}
+
+@media (min-width: 640px) {
+    :deep(.responsive-label .p-button-label) {
+        display: block;
+    }
+}
+</style>
