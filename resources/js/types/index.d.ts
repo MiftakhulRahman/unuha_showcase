@@ -16,6 +16,12 @@ export interface NavItem {
     icon?: LucideIcon;
     isActive?: boolean;
     description?: string;
+    items?: NavItem[]; // Subitems for collapsible menu
+}
+
+export interface NavGroup {
+    label?: string;
+    items: NavItem[];
 }
 
 export type AppPageProps<

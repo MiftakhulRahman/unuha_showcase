@@ -1,17 +1,15 @@
 <script setup lang="ts">
-import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import {
     Sidebar,
     SidebarContent,
-    SidebarFooter,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
-import { type NavItem } from '@/types';
+import { type NavGroup } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 import {
     LayoutGrid,
@@ -23,8 +21,13 @@ import {
     Settings,
     Wrench,
     FileText,
-    Database,
-    ArrowLeft
+    ArrowLeft,
+    FolderTree,
+    Tags,
+    LockKeyhole,
+    Palette,
+    UserCircle,
+    Shield
 } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 import { computed } from 'vue';
@@ -34,150 +37,187 @@ const page = usePage();
 const user = computed(() => page.props.auth?.user);
 const { setOpenMobile } = useSidebar();
 
-const mainNavItems = computed<NavItem[]>(() => {
-    const items: NavItem[] = [
-        {
-            title: 'Dasbor',
-            href: dashboard().url,
-            icon: LayoutGrid,
-        },
-    ];
+const mainNavGroups = computed<NavGroup[]>(() => {
+    const groups: NavGroup[] = [];
 
-    if (!user.value) return items;
+    // Dashboard - standalone
+    groups.push({
+        items: [
+            {
+                title: 'Dashboard',
+                href: dashboard().url,
+                icon: LayoutGrid,
+            },
+        ],
+    });
+
+    if (!user.value) return groups;
 
     // === SUPERADMIN MENU ===
     if (user.value.role === 'superadmin') {
-        items.push(
-            // Manajemen User (Dosen & Mahasiswa)
-            {
-                title: 'Manajemen Pengguna',
-                href: '/admin/users',
-                icon: Users,
-                description: 'Kelola akun dosen dan mahasiswa',
-            },
-            {
-                title: 'Manajemen Dosen',
-                href: '/admin/dosen',
-                icon: GraduationCap,
-                description: 'Kelola data dosen',
-            },
-            {
-                title: 'Manajemen Mahasiswa',
-                href: '/admin/mahasiswa',
-                icon: User,
-                description: 'Kelola data mahasiswa',
-            },
-            // Manajemen Master Data
-            {
-                title: 'Manajemen Program Studi',
-                href: '/admin/prodis',
-                icon: Database,
-                description: 'Kelola data program studi',
-            },
-            {
-                title: 'Manajemen Kategori',
-                href: '/admin/kategoris',
-                icon: Database,
-                description: 'Kelola kategori project',
-            },
-            {
-                title: 'Manajemen Teknologi',
-                href: '/admin/tools',
-                icon: Wrench,
-                description: 'Kelola teknologi yang digunakan',
-            },
-            // Manajemen Project
-            {
-                title: 'Manajemen Project',
-                href: '/admin/projects',
-                icon: BookOpen,
-                description: 'Kelola & moderasi semua project',
-            },
-            // Manajemen Challenge
-            {
-                title: 'Manajemen Challenge',
-                href: '/admin/challenges',
-                icon: Trophy,
-                description: 'Monitor & kelola semua challenge',
-            }
-        );
+        // Kelompok Pengguna
+        groups.push({
+            label: 'Pengguna', // Disingkat dari Manajemen Pengguna
+            items: [
+                {
+                    title: 'Pengguna', // Sebelumnya: Manajemen Pengguna
+                    href: '/admin/users',
+                    icon: Users,
+                },
+                {
+                    title: 'Dosen', // Sebelumnya: Manajemen Dosen
+                    href: '/admin/dosen',
+                    icon: GraduationCap,
+                },
+                {
+                    title: 'Mahasiswa', // Sebelumnya: Manajemen Mahasiswa
+                    href: '/admin/mahasiswa',
+                    icon: User,
+                },
+            ],
+        });
+
+        // Data Master
+        groups.push({
+            label: 'Data Master',
+            items: [
+                {
+                    title: 'Program Studi', // Sebelumnya: Manajemen Program Studi
+                    href: '/admin/prodis',
+                    icon: FolderTree,
+                },
+                {
+                    title: 'Kategori', // Sebelumnya: Manajemen Kategori
+                    href: '/admin/kategoris',
+                    icon: Tags,
+                },
+                {
+                    title: 'Teknologi', // Sebelumnya: Manajemen Teknologi
+                    href: '/admin/tools',
+                    icon: Wrench,
+                },
+            ],
+        });
+
+        // Konten
+        groups.push({
+            label: 'Konten',
+            items: [
+                {
+                    title: 'Project', // Sebelumnya: Manajemen Project
+                    href: '/admin/projects',
+                    icon: BookOpen,
+                },
+                {
+                    title: 'Challenge', // Sebelumnya: Manajemen Challenge
+                    href: '/admin/challenges',
+                    icon: Trophy,
+                },
+            ],
+        });
+
+        // Settings group
+        groups.push({
+            label: 'Pengaturan',
+            items: [
+                {
+                    title: 'Pengaturan',
+                    href: '/settings/profile',
+                    icon: Settings,
+                    items: [
+                        {
+                            title: 'Profil',
+                            href: '/settings/profile',
+                            icon: UserCircle,
+                        },
+                        {
+                            title: 'Password',
+                            href: '/settings/password',
+                            icon: LockKeyhole,
+                        },
+                        {
+                            title: 'Autentikasi Dua Faktor',
+                            href: '/settings/two-factor',
+                            icon: Shield,
+                        },
+                        {
+                            title: 'Tampilan',
+                            href: '/settings/appearance',
+                            icon: Palette,
+                        },
+                    ],
+                },
+            ],
+        });
     }
     // === DOSEN MENU ===
     else if (user.value.role === 'dosen') {
-        items.push(
-            {
-                title: 'Project Saya',
-                href: '/projects',
-                icon: BookOpen,
-                description: 'Portfolio project penelitian/pengabdian',
-            },
-            {
-                title: 'Manajemen Challenge',
-                href: '/challenges',
-                icon: Trophy,
-                description: 'Buat dan kelola kompetisi',
-            },
-            {
-                title: 'Penilaian Challenge',
-                href: '/penilaian',
-                icon: FileText,
-                description: 'Nilai submission mahasiswa',
-            },
-            {
-                title: 'Profil Dosen',
-                href: '/profile/dosen',
-                icon: GraduationCap,
-                description: 'Kelola profil akademik',
-            }
-        );
+        groups.push({
+            label: 'Konten',
+            items: [
+                {
+                    title: 'Project Saya',
+                    href: '/projects',
+                    icon: BookOpen,
+                },
+                {
+                    title: 'Challenge', // Sebelumnya: Manajemen Challenge
+                    href: '/challenges',
+                    icon: Trophy,
+                },
+                {
+                    title: 'Penilaian Challenge',
+                    href: '/penilaian',
+                    icon: FileText,
+                },
+            ],
+        });
+
+        groups.push({
+            items: [
+                {
+                    title: 'Profil Dosen',
+                    href: '/profile/dosen',
+                    icon: GraduationCap,
+                },
+            ],
+        });
     }
     // === MAHASISWA MENU ===
     else if (user.value.role === 'mahasiswa') {
-        items.push(
-            {
-                title: 'Project Saya',
-                href: '/projects',
-                icon: BookOpen,
-                description: 'Portfolio karya mahasiswa',
-            },
-            {
-                title: 'Ikuti Challenge',
-                href: '/challenges',
-                icon: Trophy,
-                description: 'Daftar dan kirim project ke challenge',
-            },
-            {
-                title: 'Kolaborasi',
-                href: '/kolaborasi',
-                icon: Users,
-                description: 'Kelola tim proyek',
-            },
-            {
-                title: 'Profil Mahasiswa',
-                href: '/profile/mahasiswa',
-                icon: User,
-                description: 'Kelola biodata dan skill',
-            }
-        );
+        groups.push({
+            label: 'Konten',
+            items: [
+                {
+                    title: 'Project Saya',
+                    href: '/projects',
+                    icon: BookOpen,
+                },
+                {
+                    title: 'Ikuti Challenge',
+                    href: '/challenges',
+                    icon: Trophy,
+                },
+                {
+                    title: 'Kolaborasi',
+                    href: '/kolaborasi',
+                    icon: Users,
+                },
+            ],
+        });
+
+        groups.push({
+            items: [
+                {
+                    title: 'Profil Mahasiswa',
+                    href: '/profile/mahasiswa',
+                    icon: User,
+                },
+            ],
+        });
     }
 
-    return items;
-});
-
-const footerNavItems = computed<NavItem[]>(() => {
-    const items: NavItem[] = [];
-
-    if (!user.value) return items;
-
-    // Settings untuk semua user
-    items.push({
-        title: 'Pengaturan',
-        href: '/settings/profile',
-        icon: Settings,
-        description: 'Profil & pengaturan akun',
-    });
-
-    return items;
+    return groups;
 });
 </script>
 
@@ -192,7 +232,6 @@ const footerNavItems = computed<NavItem[]>(() => {
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>
-                        <!-- Mobile Close Button -->
                         <button
                             @click="setOpenMobile(false)"
                             class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors md:hidden"
@@ -206,12 +245,8 @@ const footerNavItems = computed<NavItem[]>(() => {
         </SidebarHeader>
 
         <SidebarContent>
-            <NavMain :items="mainNavItems" />
+            <NavMain :groups="mainNavGroups" />
         </SidebarContent>
-
-        <SidebarFooter>
-            <NavFooter :items="footerNavItems" />
-        </SidebarFooter>
     </Sidebar>
     <slot />
 </template>
