@@ -39,11 +39,30 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const columns = [
-    { field: 'name', header: 'Nama', sortable: true },
-    { field: 'email', header: 'Email', sortable: true },
-    { field: 'username', header: 'Username', sortable: true },
-    { field: 'role', header: 'Role', sortable: true },
-    { field: 'is_active', header: 'Status', sortable: true },
+    { field: 'name', header: 'Nama', sortable: true, filterType: 'text' as const },
+    { field: 'email', header: 'Email', sortable: true, filterType: 'text' as const },
+    { field: 'username', header: 'Username', sortable: true, filterType: 'text' as const },
+    { 
+        field: 'role', 
+        header: 'Role', 
+        sortable: true, 
+        filterType: 'select' as const,
+        filterOptions: [
+            { label: 'Superadmin', value: 'superadmin' },
+            { label: 'Dosen', value: 'dosen' },
+            { label: 'Mahasiswa', value: 'mahasiswa' },
+        ]
+    },
+    { 
+        field: 'is_active', 
+        header: 'Status', 
+        sortable: true, 
+        filterType: 'boolean' as const,
+        filterOptions: [
+            { label: 'Aktif', value: true },
+            { label: 'Tidak Aktif', value: false },
+        ]
+    },
 ];
 
 const getRoleSeverity = (role: string) => {
@@ -111,13 +130,14 @@ const closeModals = () => {
                         </template>
 
                         <template #cell-role="{ item }">
-                            <Tag :value="item.role" :severity="getRoleSeverity(item.role)" />
+                            <Tag :value="item.role" :severity="getRoleSeverity(item.role)" class="font-bold" />
                         </template>
 
                         <template #cell-is_active="{ item }">
                             <Tag 
                                 :value="item.is_active ? 'Aktif' : 'Tidak Aktif'" 
                                 :severity="getStatusSeverity(item.is_active)" 
+                                class="font-bold"
                             />
                         </template>
 

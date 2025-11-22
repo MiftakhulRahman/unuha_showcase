@@ -181,3 +181,120 @@
             'Noto Color Emoji';
     }
 }
+
+/* Toast Styling - Light Text for Better Readability */
+:root {
+    --p-toast-background: #ffffff;
+    --p-toast-text-color: #1f2937;
+    --p-toast-border-color: #e5e7eb;
+    --p-toast-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.dark {
+    --p-toast-background: #1f2937;
+    --p-toast-text-color: #f3f4f6;
+    --p-toast-border-color: #374151;
+    --p-toast-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+}
+
+.p-toast {
+    gap: 1rem;
+}
+
+.p-toast-message {
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin: 0;
+    box-shadow: var(--p-toast-shadow);
+}
+
+.p-toast-message-summary {
+    font-weight: 600;
+    color: var(--p-toast-text-color);
+}
+
+.p-toast-message-detail {
+    margin-top: 0.25rem;
+    color: var(--p-toast-text-color);
+    font-size: 0.875rem;
+}
+
+.p-toast-message.p-toast-message-success {
+    background-color: #d1fae5;
+    border-left: 4px solid #10b981;
+}
+
+.p-toast-message.p-toast-message-success .p-toast-message-summary,
+.p-toast-message.p-toast-message-success .p-toast-message-detail {
+    color: #065f46;
+}
+
+.p-toast-message.p-toast-message-info {
+    background-color: #dbeafe;
+    border-left: 4px solid #3b82f6;
+}
+
+.p-toast-message.p-toast-message-info .p-toast-message-summary,
+.p-toast-message.p-toast-message-info .p-toast-message-detail {
+    color: #1e40af;
+}
+
+.p-toast-message.p-toast-message-warn {
+    background-color: #fef3c7;
+    border-left: 4px solid #f59e0b;
+}
+
+.p-toast-message.p-toast-message-warn .p-toast-message-summary,
+.p-toast-message.p-toast-message-warn .p-toast-message-detail {
+    color: #78350f;
+}
+
+.p-toast-message.p-toast-message-error {
+    background-color: #fee2e2;
+    border-left: 4px solid #ef4444;
+}
+
+.p-toast-message.p-toast-message-error .p-toast-message-summary,
+.p-toast-message.p-toast-message-error .p-toast-message-detail {
+    color: #7f1d1d;
+}
+
+.dark .p-toast-message.p-toast-message-success {
+    background-color: #064e3b;
+    border-left-color: #10b981;
+}
+
+.dark .p-toast-message.p-toast-message-success .p-toast-message-summary,
+.dark .p-toast-message.p-toast-message-success .p-toast-message-detail {
+    color: #d1fae5;
+}
+
+.dark .p-toast-message.p-toast-message-info {
+    background-color: #0c2340;
+    border-left-color: #3b82f6;
+}
+
+.dark .p-toast-message.p-toast-message-info .p-toast-message-summary,
+.dark .p-toast-message.p-toast-message-info .p-toast-message-detail {
+    color: #dbeafe;
+}
+
+.dark .p-toast-message.p-toast-message-warn {
+    background-color: #451a03;
+    border-left-color: #f59e0b;
+}
+
+.dark .p-toast-message.p-toast-message-warn .p-toast-message-summary,
+.dark .p-toast-message.p-toast-message-warn .p-toast-message-detail {
+    color: #fef3c7;
+}
+
+.dark .p-toast-message.p-toast-message-error {
+    background-color: #4c0519;
+    border-left-color: #ef4444;
+}
+
+.dark .p-toast-message.p-toast-message-error .p-toast-message-summary,
+.dark .p-toast-message.p-toast-message-error .p-toast-message-detail {
+    color: #fee2e2;
+}
