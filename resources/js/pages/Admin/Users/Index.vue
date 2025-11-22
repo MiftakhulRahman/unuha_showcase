@@ -102,7 +102,7 @@ const closeModals = () => {
 <template>
     <Head title="Manajemen Pengguna" />
     <AppLayout>
-        <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-950 dark:to-gray-900">
+        <div class="min-h-screen">
             <div class="mx-auto max-w-7xl space-y-6 p-6">
                 <!-- Breadcrumb -->
                 <Breadcrumbs :breadcrumbs="breadcrumbs" />

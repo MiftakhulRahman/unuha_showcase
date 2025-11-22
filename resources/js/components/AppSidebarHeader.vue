@@ -18,7 +18,7 @@ const auth = computed(() => page.props.auth);
 
 <template>
     <header
-        class="flex h-16 shrink-0 items-center gap-2 border-b border-sidebar-border/70 px-6 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-16 md:px-4 bg-background sticky top-0 z-40"
+        class="flex h-16 shrink-0 items-center gap-2 border border-gray-200 dark:border-gray-800 px-6 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-16 md:px-4 bg-white dark:bg-gray-900 shadow rounded-2xl sticky top-4 z-40 mx-4 mt-4"
     >
         <div class="flex items-center gap-2 flex-1">
             <SidebarTrigger class="-ml-1" />

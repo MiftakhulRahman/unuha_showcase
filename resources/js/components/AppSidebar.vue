@@ -23,13 +23,16 @@ import {
     Settings,
     Wrench,
     FileText,
-    Database
+    Database,
+    ArrowLeft
 } from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 import { computed } from 'vue';
+import { useSidebar } from '@/components/ui/sidebar/utils';
 
 const page = usePage();
 const user = computed(() => page.props.auth?.user);
+const { setOpenMobile } = useSidebar();
 
 const mainNavItems = computed<NavItem[]>(() => {
     const items: NavItem[] = [
@@ -183,11 +186,21 @@ const footerNavItems = computed<NavItem[]>(() => {
         <SidebarHeader>
             <SidebarMenu>
                 <SidebarMenuItem>
-                    <SidebarMenuButton size="lg" as-child>
-                        <Link :href="dashboard()">
-                            <AppLogo />
-                        </Link>
-                    </SidebarMenuButton>
+                    <div class="flex items-center justify-between w-full">
+                        <SidebarMenuButton size="lg" as-child class="flex-1">
+                            <Link :href="dashboard()">
+                                <AppLogo />
+                            </Link>
+                        </SidebarMenuButton>
+                        <!-- Mobile Close Button -->
+                        <button
+                            @click="setOpenMobile(false)"
+                            class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors md:hidden"
+                            aria-label="Close sidebar"
+                        >
+                            <ArrowLeft class="h-5 w-5" />
+                        </button>
+                    </div>
                 </SidebarMenuItem>
             </SidebarMenu>
         </SidebarHeader>
