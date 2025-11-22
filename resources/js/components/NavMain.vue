@@ -23,7 +23,7 @@ const page = usePage();
 </script>
 
 <template>
-    <SidebarGroup v-for="(group, index) in groups" :key="index" class="py-0 px-2 mb-2 last:mb-0">
+    <SidebarGroup v-for="(group, index) in groups" :key="index" class="py-0 px-2 last:mb-0">
         <SidebarGroupLabel 
             v-if="group.label"
             class="

@@ -134,7 +134,7 @@ const closeModals = () => {
                                 :value="item.role" 
                                 :severity="getRoleSeverity(item.role)" 
                                 class="custom-badge"
-                                style="font-weight: 600 !important;" 
+                                style="font-weight: 500 !important;" 
                             />
                         </template>
 
@@ -143,7 +143,7 @@ const closeModals = () => {
                                 :value="item.is_active ? 'Aktif' : 'Tidak Aktif'" 
                                 :severity="getStatusSeverity(item.is_active)" 
                                 class="custom-badge"
-                                style="font-weight: 600 !important;"
+                                style="font-weight: 500 !important;"
                             />
                         </template>
 
@@ -206,7 +206,7 @@ const closeModals = () => {
 :deep(.custom-badge .p-tag-value),
 :deep(.p-tag.custom-badge),
 :deep(.p-tag.custom-badge span) {
-    font-weight: 600 !important; /* Try Semibold (600) or Extra Bold (800) - User said 700 system was too thick, Outfit 700 was too thin. Let's try 600 first, if too thin, we go 800. Actually, let's go with a specific weight that might work better. */
+    font-weight: 500 !important; /* Try Semibold (500) or Extra Bold (800) - User said 700 system was too thick, Outfit 700 was too thin. Let's try 500 first, if too thin, we go 800. Actually, let's go with a specific weight that might work better. */
     font-family: 'Outfit', sans-serif !important;
 }
 </style>

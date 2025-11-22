@@ -264,7 +264,7 @@ const openNew = () => {
             <p v-if="description" class="m-0 mt-1 text-sm text-gray-600 dark:text-gray-400">{{ description }}</p>
         </div>
 
-        <Toolbar class="mb-6">
+        <Toolbar class="mb-2">
             <template #start>
                 <slot name="toolbar-start">
                     <Button 
