@@ -502,12 +502,34 @@ const openNew = () => {
 </style>
 
 <style>
-.export-menu-popup {
+/* Styling untuk dropdown menu export - lebih spesifik */
+.export-menu-popup.p-menu {
+    min-width: 0 !important;
+    width: fit-content !important;
+    max-width: 110px !important;
+}
+
+.export-menu-popup .p-menu-list {
+    padding: 0.25rem !important;
+}
+
+.export-menu-popup .p-menu-item {
+    margin: 0 !important;
+}
+
+.export-menu-popup .p-menu-item-content {
+    padding: 0.5rem 0.75rem !important;
+    min-width: 0 !important;
+}
+
+.export-menu-popup .p-menu-item-label {
+    font-size: 0.875rem !important;
+    white-space: nowrap !important;
+}
+
+/* Targeting via PrimeVue's overlay structure */
+.p-splitbutton-overlay.export-menu-popup {
     min-width: 0 !important;
     width: auto !important;
-}
-.export-menu-popup .p-menu-item-content {
-    padding-left: 0.5rem !important;
-    padding-right: 0.5rem !important;
 }
 </style>

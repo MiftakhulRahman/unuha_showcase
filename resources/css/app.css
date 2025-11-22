@@ -298,3 +298,39 @@
 .dark .p-toast-message.p-toast-message-error .p-toast-message-detail {
     color: #fee2e2;
 }
+
+/* Export Dropdown Menu Styling - Compact Width for TieredMenu */
+/* Menargetkan semua TieredMenu overlay dari SplitButton */
+.p-tieredmenu.p-tieredmenu-overlay {
+    min-width: 0 !important;
+    width: fit-content !important;
+    max-width: 130px !important;
+}
+
+.p-tieredmenu.p-tieredmenu-overlay .p-tieredmenu-root-list {
+    padding: 0.25rem !important;
+    min-width: 0 !important;
+}
+
+.p-tieredmenu.p-tieredmenu-overlay .p-tieredmenu-item {
+    margin: 0 !important;
+}
+
+.p-tieredmenu.p-tieredmenu-overlay .p-tieredmenu-item-content {
+    padding: 0.375rem 0.625rem !important;
+    min-width: 0 !important;
+}
+
+.p-tieredmenu.p-tieredmenu-overlay .p-tieredmenu-item-link {
+    padding: 0 !important;
+    white-space: nowrap !important;
+    gap: 0.5rem !important;
+}
+
+.p-tieredmenu.p-tieredmenu-overlay .p-tieredmenu-item-label {
+    font-size: 0.875rem !important;
+}
+
+.p-tieredmenu.p-tieredmenu-overlay .p-tieredmenu-item-icon {
+    font-size: 0.875rem !important;
+}
