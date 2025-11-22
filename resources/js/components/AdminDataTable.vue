@@ -194,7 +194,7 @@ const onPage = (event: DataTablePageEvent) => {
                      <!-- Special handling for status column -->
                     <template v-if="col.key === 'is_active'">
                          <slot :name="`cell-${col.key}`" :item="item">
-                            <Tag :value="item.is_active ? 'Aktif' : 'Tidak Aktif'" :severity="getStatusSeverity(item.is_active)" />
+                            <Tag :value="item.is_active ? 'Aktif' : 'Tidak Aktif'" :severity="getStatusSeverity(item.is_active)" class="font-semibold" />
                         </slot>
                     </template>
                      <!-- Default cell render -->

@@ -130,14 +130,14 @@ const closeModals = () => {
                         </template>
 
                         <template #cell-role="{ item }">
-                            <Tag :value="item.role" :severity="getRoleSeverity(item.role)" class="font-bold" />
+                            <Tag :value="item.role" :severity="getRoleSeverity(item.role)" class="font-semibold" />
                         </template>
 
                         <template #cell-is_active="{ item }">
                             <Tag 
                                 :value="item.is_active ? 'Aktif' : 'Tidak Aktif'" 
                                 :severity="getStatusSeverity(item.is_active)" 
-                                class="font-bold"
+                                class="font-semibold"
                             />
                         </template>
 
