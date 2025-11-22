@@ -25,7 +25,7 @@ const auth = computed(() => page.props.auth);
         </div>
         
         <div class="ml-auto">
-            <DropdownMenu>
+            <DropdownMenu :modal="false">
                 <DropdownMenuTrigger :as-child="true">
                     <Button
                         variant="ghost"

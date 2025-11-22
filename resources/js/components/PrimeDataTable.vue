@@ -309,6 +309,7 @@ const openNew = () => {
                     :model="exportItems"
                     @click="exportCSV"
                     class="responsive-label"
+                    :pt="{ menu: { class: 'export-menu-popup' } }"
                 />
             </template>
         </Toolbar>
@@ -497,5 +498,16 @@ const openNew = () => {
     :deep(.responsive-label .p-button-label) {
         display: block;
     }
+}
+</style>
+
+<style>
+.export-menu-popup {
+    min-width: 0 !important;
+    width: auto !important;
+}
+.export-menu-popup .p-menu-item-content {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
 }
 </style>
