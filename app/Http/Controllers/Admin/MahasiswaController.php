@@ -143,7 +143,7 @@ class MahasiswaController extends Controller
 
         $user->profileMahasiswa->update($validated['profile']);
 
-        return redirect()->route('admin.mahasiswa.show', $user)
+        return redirect()->route('admin.mahasiswa.index')
             ->with('success', 'Data mahasiswa berhasil diperbarui!');
     }
 

@@ -84,7 +84,7 @@ class ProdiController extends Controller
 
         $prodi->update($validated);
 
-        return redirect()->route('admin.prodis.show', $prodi)
+        return redirect()->route('admin.prodis.index')
             ->with('success', 'Program studi berhasil diperbarui!');
     }
 

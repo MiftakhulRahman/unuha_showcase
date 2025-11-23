@@ -135,7 +135,7 @@ class DosenController extends Controller
 
         $user->profileDosen->update($validated['profile']);
 
-        return redirect()->route('admin.dosen.show', $user)
+        return redirect()->route('admin.dosen.index')
             ->with('success', 'Data dosen berhasil diperbarui!');
     }
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 23, 2025 at 12:03 AM
+-- Generation Time: Nov 23, 2025 at 01:16 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -76,7 +76,9 @@ INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
 ('unuha-showcase-cache-2c9e9bb3026837dc2e9e2a510704fa86', 'i:1;', 1763622004),
 ('unuha-showcase-cache-2c9e9bb3026837dc2e9e2a510704fa86:timer', 'i:1763622004;', 1763622004),
 ('unuha-showcase-cache-31a24322c3c3f56c5694794860f231ad', 'i:1;', 1763854422),
-('unuha-showcase-cache-31a24322c3c3f56c5694794860f231ad:timer', 'i:1763854422;', 1763854422);
+('unuha-showcase-cache-31a24322c3c3f56c5694794860f231ad:timer', 'i:1763854422;', 1763854422),
+('unuha-showcase-cache-82108fd6e45a95b5c8053905caacf660', 'i:1;', 1763858508),
+('unuha-showcase-cache-82108fd6e45a95b5c8053905caacf660:timer', 'i:1763858508;', 1763858508);
 
 -- --------------------------------------------------------
 
@@ -221,7 +223,7 @@ CREATE TABLE `kategoris` (
 --
 
 INSERT INTO `kategoris` (`id`, `nama`, `slug`, `deskripsi`, `icon`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, 'Web Application', 'web-application', 'Web-application', '🌐', 1, '2025-11-19 21:07:57', '2025-11-19 21:07:57'),
+(1, 'Web Application', 'web-application', 'Web-application', '🌐', 1, '2025-11-19 21:07:57', '2025-11-22 17:31:59'),
 (2, 'Mobile App', 'mobile-app', 'Mobile-app', '📱', 1, '2025-11-19 21:07:57', '2025-11-19 21:07:57'),
 (3, 'Desktop Application', 'desktop-application', 'Desktop-application', '💻', 1, '2025-11-19 21:07:57', '2025-11-19 21:07:57'),
 (4, 'Machine Learning', 'machine-learning', 'Machine-learning', '🤖', 1, '2025-11-19 21:07:57', '2025-11-19 21:07:57'),
@@ -301,7 +303,7 @@ CREATE TABLE `prodis` (
 --
 
 INSERT INTO `prodis` (`id`, `nama`, `kode`, `deskripsi`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, 'Informatika', 'IF', 'Program Studi Informatika', 1, '2025-11-19 21:07:57', '2025-11-19 21:07:57'),
+(1, 'Informatika', 'IF', 'Program Studi Informatika', 1, '2025-11-19 21:07:57', '2025-11-22 17:31:42'),
 (2, 'Pendidikan Teknologi Informasi', 'PTI', 'Program Studi Pendidikan Teknologi Informasi', 1, '2025-11-19 21:07:57', '2025-11-19 21:07:57');
 
 -- --------------------------------------------------------
@@ -355,7 +357,7 @@ CREATE TABLE `profile_mahasiswas` (
 --
 
 INSERT INTO `profile_mahasiswas` (`id`, `user_id`, `nim`, `prodi_id`, `angkatan`, `semester`, `github_url`, `linkedin_url`, `portfolio_url`, `created_at`, `updated_at`) VALUES
-(1, 3, '21010001', 1, 2021, 6, 'https://github.com/ahmad-wijaya', 'https://linkedin.com/in/ahmad-wijaya', NULL, '2025-11-19 21:07:58', '2025-11-19 21:07:58'),
+(1, 3, '21010001', 1, 2021, 5, 'https://github.com/ahmad-wijaya', 'https://linkedin.com/in/ahmad-wijaya', NULL, '2025-11-19 21:07:58', '2025-11-22 17:42:52'),
 (2, 4, '21010002', 2, 2021, 6, 'https://github.com/siti-rahma', 'https://linkedin.com/in/siti-rahma', NULL, '2025-11-19 21:07:58', '2025-11-19 21:07:58');
 
 -- --------------------------------------------------------
@@ -390,7 +392,7 @@ CREATE TABLE `projects` (
 --
 
 INSERT INTO `projects` (`id`, `user_id`, `kategori_id`, `title`, `slug`, `description`, `content`, `thumbnail`, `banner_image`, `repository_url`, `demo_url`, `video_url`, `status`, `is_featured`, `published_at`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 2, 1, 'nnn', 'nnn', 'nnn', 'nnnn', NULL, NULL, 'https://github.com', 'https://youtube.com', 'https://youtube.com', 'draft', 0, NULL, '2025-11-19 22:59:44', '2025-11-19 22:59:44', NULL);
+(1, 2, 1, 'nnn', 'nnn', 'nnn', 'nnnn', NULL, NULL, 'https://github.com', 'https://youtube.com', 'https://youtube.com', 'published', 1, NULL, '2025-11-19 22:59:44', '2025-11-22 17:42:14', NULL);
 
 -- --------------------------------------------------------
 
@@ -450,8 +452,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('J1e4IDNZGiXVbDkqaT8c8s6kKsjjwoLjJ4t8AsrR', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiWHZMckp2ZGdGdGhlajRSOEkwV3VqaGJIYmR5a24yQ3hWMzBVTUpGSiI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mzk6Imh0dHA6Ly91bnVoYV9zaG93Y2FzZS50ZXN0L2FkbWluL3Byb2RpcyI7czo1OiJyb3V0ZSI7czoxODoiYWRtaW4ucHJvZGlzLmluZGV4Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTt9', 1763856097),
-('v9V7omDV8xj92Zmpo2F5QsZHHfDRWjAyA4L0AN2o', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiejQ4dVNnYmN4OXpMRDgwcFlUN3pmVlRlZFBJU2R1UUF6WEc4TlJ5TyI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czozODoiaHR0cDovL3VudWhhX3Nob3djYXNlLnRlc3QvYWRtaW4vdXNlcnMiO31zOjk6Il9wcmV2aW91cyI7YToyOntzOjM6InVybCI7czozMjoiaHR0cDovL3VudWhhX3Nob3djYXNlLnRlc3QvbG9naW4iO3M6NToicm91dGUiO3M6NToibG9naW4iO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1763850228),
+('f3zaOJHbuJJUtRgTycOm2S4OgNuN36zUvERa5MoP', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiUzh6aGt6YVVMMUpFaGVOUlo2UGI4SmF5Y0tqY1ZWNUMweXZqQTNmNCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1763860409),
+('J1e4IDNZGiXVbDkqaT8c8s6kKsjjwoLjJ4t8AsrR', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiWHZMckp2ZGdGdGhlajRSOEkwV3VqaGJIYmR5a24yQ3hWMzBVTUpGSiI7czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6Mzg6Imh0dHA6Ly91bnVoYV9zaG93Y2FzZS50ZXN0L2FkbWluL3Rvb2xzIjtzOjU6InJvdXRlIjtzOjE3OiJhZG1pbi50b29scy5pbmRleCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7fQ==', 1763860503),
 ('ZuuI4tIRldIYtZ7oGp6iQEHKW5CNOiKhxcLO7NP2', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoidnhDWjZyaFVtWmY0eld5d0dFQjdmd3M3cE1DaDlrb2xTT0JQbWlvMCI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjI6e3M6MzoidXJsIjtzOjMyOiJodHRwOi8vdW51aGFfc2hvd2Nhc2UudGVzdC9sb2dpbiI7czo1OiJyb3V0ZSI7czo1OiJsb2dpbiI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7fQ==', 1763854363);
 
 -- --------------------------------------------------------
@@ -493,7 +495,7 @@ CREATE TABLE `tools` (
 --
 
 INSERT INTO `tools` (`id`, `nama`, `slug`, `deskripsi`, `icon`, `color`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, 'Laravel', 'laravel', 'Laravel', '🔴', 'red', 1, '2025-11-19 21:07:57', '2025-11-19 21:07:57'),
+(1, 'Laravel', 'laravel', 'Laravel', '🔴', 'red', 1, '2025-11-19 21:07:57', '2025-11-22 17:32:23'),
 (2, 'Vue.js', 'vuejs', 'Vue.js', '💚', 'green', 1, '2025-11-19 21:07:57', '2025-11-19 21:07:57'),
 (3, 'React', 'react', 'React', '⚛️', 'blue', 1, '2025-11-19 21:07:57', '2025-11-19 21:07:57'),
 (4, 'Next.js', 'nextjs', 'Next.js', '⬛', 'black', 1, '2025-11-19 21:07:57', '2025-11-19 21:07:57'),
@@ -502,7 +504,6 @@ INSERT INTO `tools` (`id`, `nama`, `slug`, `deskripsi`, `icon`, `color`, `is_act
 (7, 'JavaScript', 'javascript', 'JavaScript', '⚡', 'yellow', 1, '2025-11-19 21:07:57', '2025-11-19 21:07:57'),
 (8, 'Node.js', 'nodejs', 'Node.js', '💚', 'green', 1, '2025-11-19 21:07:57', '2025-11-19 21:07:57'),
 (9, 'MongoDB', 'mongodb', 'MongoDB', '🍃', 'green', 1, '2025-11-19 21:07:57', '2025-11-19 21:07:57'),
-(10, 'PostgreSQL', 'postgresql', 'PostgreSQL', '🐘', 'blue', 1, '2025-11-19 21:07:57', '2025-11-19 21:07:57'),
 (11, 'MySQL', 'mysql', 'MySQL', '🐬', 'blue', 1, '2025-11-19 21:07:57', '2025-11-19 21:07:57'),
 (12, 'Docker', 'docker', 'Docker', '🐳', 'blue', 1, '2025-11-19 21:07:57', '2025-11-19 21:07:57'),
 (13, 'Git', 'git', 'Git', '🔄', 'orange', 1, '2025-11-19 21:07:57', '2025-11-19 21:07:57'),
@@ -544,7 +545,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `name`, `email`, `username`, `email_verified_at`, `password`, `avatar`, `bio`, `role`, `is_active`, `registration_completed`, `two_factor_secret`, `two_factor_recovery_codes`, `two_factor_confirmed_at`, `remember_token`, `created_at`, `updated_at`) VALUES
 (1, 'Administrator', 'admin@unuha.ac.id', 'admin', NULL, '$2y$12$YeF1dTemYearZMVNPAB9w.p1fyswd1HeJ9GWcQmIwFPk0DDs7aXQe', NULL, NULL, 'superadmin', 1, 1, NULL, NULL, NULL, NULL, '2025-11-19 21:07:58', '2025-11-19 21:07:58'),
-(2, 'Dr. Budi Santoso', 'budi@unuha.ac.id', 'budi_santoso', NULL, '$2y$12$EIwge4waa5ggQeD3Px3nJuxWoWufC9LjIofaBcVNHaarpiNkXPcpu', NULL, NULL, 'dosen', 1, 1, NULL, NULL, NULL, NULL, '2025-11-19 21:07:58', '2025-11-19 21:07:58'),
+(2, 'Dr. Budi Santosoo', 'budi@unuha.ac.id', 'budi_santoso', NULL, '$2y$12$EIwge4waa5ggQeD3Px3nJuxWoWufC9LjIofaBcVNHaarpiNkXPcpu', NULL, NULL, 'dosen', 1, 1, NULL, NULL, NULL, NULL, '2025-11-19 21:07:58', '2025-11-22 17:33:11'),
 (3, 'Ahmad Wijaya', 'ahmad@student.unuha.ac.id', 'ahmad_wijaya', NULL, '$2y$12$rN/Yf9cYORmp1bCPPrebkOvEfxhyoJ8F3GwMUiVkDkCGrmWtDxXo2', NULL, NULL, 'mahasiswa', 1, 1, NULL, NULL, NULL, NULL, '2025-11-19 21:07:58', '2025-11-19 21:07:58'),
 (4, 'Siti Rahma', 'siti@student.unuha.ac.id', 'siti_rahma', NULL, '$2y$12$O3D.PGK7ZziDPbitaTH3Su1jaI5.IEDNmcOnbaYk1i0gOudKMCTyC', NULL, NULL, 'mahasiswa', 1, 1, NULL, NULL, NULL, NULL, '2025-11-19 21:07:58', '2025-11-19 21:07:58');
 
