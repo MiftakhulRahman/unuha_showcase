@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 import { type BreadcrumbItem } from '@/types';
-import AdminDataTable from '@/components/AdminDataTable.vue';
-import AdminFilterBar from '@/components/AdminFilterBar.vue';
+import PrimeDataTable from '@/components/PrimeDataTable.vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-vue-next';
+import Tag from 'primevue/tag';
+import Button from 'primevue/button';
 
 interface Mahasiswa {
     id: number;
@@ -34,15 +33,11 @@ interface Prodi {
 interface Props {
     mahasiswa: {
         data: Mahasiswa[];
-        links: any;
+        meta?: {
+            total: number;
+        };
     };
     prodis: Prodi[];
-    filters: {
-        search?: string;
-        prodi_id?: string;
-        angkatan?: string;
-        status?: string;
-    };
 }
 
 const props = defineProps<Props>();
@@ -52,103 +47,89 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const columns = [
-    { key: 'name', label: 'Nama' },
-    { key: 'email', label: 'Email' },
-    { key: 'profile_mahasiswa.nim', label: 'NIM' },
-    { key: 'profile_mahasiswa.prodi.nama', label: 'Prodi' },
-    { key: 'profile_mahasiswa.angkatan', label: 'Angkatan' },
-    { key: 'is_active', label: 'Status' },
+    { field: 'name', header: 'Nama', sortable: true, filterType: 'text' as const },
+    { field: 'email', header: 'Email', sortable: true, filterType: 'text' as const },
+    { field: 'profile_mahasiswa.nim', header: 'NIM', sortable: true, filterType: 'text' as const },
+    { 
+        field: 'profile_mahasiswa.prodi.nama', 
+        header: 'Prodi', 
+        sortable: true, 
+        filterType: 'select' as const,
+        filterOptions: props.prodis.map(p => ({ label: p.nama, value: p.nama }))
+    },
+    { field: 'profile_mahasiswa.angkatan', header: 'Angkatan', sortable: true, filterType: 'text' as const },
+    { 
+        field: 'is_active', 
+        header: 'Status', 
+        sortable: true, 
+        filterType: 'boolean' as const,
+        filterOptions: [
+            { label: 'Aktif', value: true },
+            { label: 'Tidak Aktif', value: false },
+        ]
+    },
 ];
 
-const getStatusBadge = (isActive: boolean) => {
-    return isActive
-        ? 'bg-green-100 text-green-800 dark:bg-green-900'
-        : 'bg-red-100 text-red-800 dark:bg-red-900';
+const getStatusSeverity = (isActive: boolean) => {
+    return isActive ? 'success' : 'danger';
 };
-
-const filterOptions = [
-    {
-        key: 'prodi_id',
-        label: 'Program Studi',
-        type: 'select' as const,
-        placeholder: 'Semua Prodi',
-        options: props.prodis.map((p) => ({ label: p.nama, value: p.id })),
-    },
-    {
-        key: 'angkatan',
-        label: 'Angkatan',
-        type: 'text' as const,
-        placeholder: 'Cari angkatan...',
-    },
-    {
-        key: 'status',
-        label: 'Status',
-        type: 'select' as const,
-        placeholder: 'Semua Status',
-        options: [
-            { label: 'Aktif', value: 'active' },
-            { label: 'Tidak Aktif', value: 'inactive' },
-        ],
-    },
-];
 </script>
 
 <template>
     <Head title="Manajemen Mahasiswa" />
     <AppLayout>
-        <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-950 dark:to-gray-900">
-            <div class="mx-auto max-w-7xl space-y-6 p-6">
-                <!-- Breadcrumb -->
-                <div class="flex items-center justify-between">
-                    <Breadcrumbs :breadcrumbs="breadcrumbs" />
-                </div>
+        <div class="p-6">
+            <div class="flex items-center justify-between mb-6">
+                <Breadcrumbs :breadcrumbs="breadcrumbs" />
+            </div>
 
-                <!-- Header Card -->
-                <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900">
-                    <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-                        <div class="space-y-1.5">
-                            <h1 class="text-2xl font-bold tracking-tight">Manajemen Mahasiswa</h1>
-                            <p class="text-sm text-muted-foreground">
-                                Kelola data semua mahasiswa dalam sistem
-                            </p>
-                        </div>
-                        <Link href="/admin/mahasiswa/create" as="button">
-                            <Button size="default" class="gap-2">
-                                <Plus class="h-4 w-4" />
-                                Tambah Mahasiswa
-                            </Button>
-                        </Link>
-                    </div>
+            <div class="rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+                <PrimeDataTable
+                    :columns="columns"
+                    :data="mahasiswa.data"
+                    :totalRecords="mahasiswa.meta?.total"
+                    title="Manajemen Mahasiswa"
+                    description="Kelola data semua mahasiswa dalam sistem"
+                    create-route="/admin/mahasiswa/create"
+                    edit-route="/admin/mahasiswa"
+                    delete-route="/admin/mahasiswa"
+                    bulk-delete-route="/admin/mahasiswa/bulk-delete"
+                    :exportable="true"
+                >
+                    <!-- Custom Slots for Nested Fields -->
+                    <template #cell-profile_mahasiswa.nim="{ item }">
+                        {{ item.profile_mahasiswa?.nim || '-' }}
+                    </template>
 
-                    <!-- Filter & Search -->
-                    <div class="mt-6">
-                        <AdminFilterBar
-                            :filters="filterOptions"
-                            :current-filters="filters"
-                            search-placeholder="Cari nama, email, NIM..."
+                    <template #cell-profile_mahasiswa.prodi.nama="{ item }">
+                        {{ item.profile_mahasiswa?.prodi?.nama || '-' }}
+                    </template>
+
+                    <template #cell-profile_mahasiswa.angkatan="{ item }">
+                        {{ item.profile_mahasiswa?.angkatan || '-' }}
+                    </template>
+
+                    <template #cell-is_active="{ item }">
+                        <Tag 
+                            :value="item.is_active ? 'Aktif' : 'Tidak Aktif'" 
+                            :severity="getStatusSeverity(item.is_active)" 
+                            class="custom-badge"
+                            style="font-weight: 500 !important;"
                         />
-                    </div>
-                </div>
-
-                <!-- Data Table Card -->
-                <div class="rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
-                    <AdminDataTable
-                        title=""
-                        :columns="columns"
-                        :data="mahasiswa.data"
-                        :links="mahasiswa.links"
-                        bulk-delete-route="/admin/mahasiswa/bulk-delete"
-                        edit-route="/admin/mahasiswa"
-                        delete-route="/admin/mahasiswa"
-                    >
-                        <template #cell-is_active="{ item }">
-                            <span :class="['inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium', getStatusBadge(item.is_active)]">
-                                {{ item.is_active ? 'Aktif' : 'Tidak Aktif' }}
-                            </span>
-                        </template>
-                    </AdminDataTable>
-                </div>
+                    </template>
+                </PrimeDataTable>
             </div>
         </div>
     </AppLayout>
 </template>
+
+<style scoped>
+/* Nuclear option for Badge Font Weight */
+:deep(.custom-badge),
+:deep(.custom-badge .p-tag-value),
+:deep(.p-tag.custom-badge),
+:deep(.p-tag.custom-badge span) {
+    font-weight: 500 !important;
+    font-family: 'Outfit', sans-serif !important;
+}
+</style>

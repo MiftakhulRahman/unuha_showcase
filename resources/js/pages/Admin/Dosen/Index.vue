@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 import { type BreadcrumbItem } from '@/types';
-import AdminDataTable from '@/components/AdminDataTable.vue';
+import PrimeDataTable from '@/components/PrimeDataTable.vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
-import Button from 'primevue/button'; // Use PrimeVue button for consistency
+import Tag from 'primevue/tag';
+import Button from 'primevue/button';
 
 interface Dosen {
     id: number;
@@ -28,19 +29,14 @@ interface Prodi {
     kode: string;
 }
 
-// Updated Props interface to include meta for pagination
 interface Props {
     dosen: {
         data: Dosen[];
-        links: any;
-        meta: any; // Added for PrimeVue DataTable pagination
+        meta?: {
+            total: number;
+        };
     };
     prodis: Prodi[];
-    filters: {
-        search?: string;
-        prodi_id?: string;
-        status?: string;
-    };
 }
 
 const props = defineProps<Props>();
@@ -50,56 +46,84 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const columns = [
-    { key: 'name', label: 'Nama', sortable: true },
-    { key: 'email', label: 'Email', sortable: true },
-    { key: 'profile_dosen.nidn', label: 'NIDN', sortable: true },
-    { key: 'profile_dosen.prodi.nama', label: 'Prodi', sortable: true },
-    { key: 'is_active', label: 'Status', sortable: true },
+    { field: 'name', header: 'Nama', sortable: true, filterType: 'text' as const },
+    { field: 'email', header: 'Email', sortable: true, filterType: 'text' as const },
+    { field: 'profile_dosen.nidn', header: 'NIDN', sortable: true, filterType: 'text' as const },
+    { 
+        field: 'profile_dosen.prodi.nama', 
+        header: 'Prodi', 
+        sortable: true, 
+        filterType: 'select' as const,
+        filterOptions: props.prodis.map(p => ({ label: p.nama, value: p.nama })) // Note: PrimeDataTable filters by value match, so we use name here if the column field is name.
+    },
+    { 
+        field: 'is_active', 
+        header: 'Status', 
+        sortable: true, 
+        filterType: 'boolean' as const,
+        filterOptions: [
+            { label: 'Aktif', value: true },
+            { label: 'Tidak Aktif', value: false },
+        ]
+    },
 ];
 
+const getStatusSeverity = (isActive: boolean) => {
+    return isActive ? 'success' : 'danger';
+};
 </script>
 
 <template>
     <Head title="Manajemen Dosen" />
     <AppLayout>
-        <!-- The main content area -->
         <div class="p-6">
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between mb-6">
                 <Breadcrumbs :breadcrumbs="breadcrumbs" />
             </div>
 
-            <div class="mt-4">
-                <div class="mb-6 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-                    <div class="space-y-1.5">
-                        <h1 class="text-2xl font-bold tracking-tight">Manajemen Dosen</h1>
-                        <p class="text-sm text-muted-foreground">
-                            Kelola data semua dosen dalam sistem.
-                        </p>
-                    </div>
-                    <Link href="/admin/dosen/create">
-                        <Button label="Tambah Dosen" icon="pi pi-plus" />
-                    </Link>
-                </div>
-
-                <!-- The new PrimeVue DataTable replaces the old structure -->
-                <AdminDataTable
+            <div class="rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900">
+                <PrimeDataTable
                     :columns="columns"
-                    :data="props.dosen.data"
-                    :meta="props.dosen.meta"
-                    bulk-delete-route="/admin/dosen/bulk-delete"
+                    :data="dosen.data"
+                    :totalRecords="dosen.meta?.total"
+                    title="Manajemen Dosen"
+                    description="Kelola data semua dosen dalam sistem"
+                    create-route="/admin/dosen/create"
                     edit-route="/admin/dosen"
                     delete-route="/admin/dosen"
+                    bulk-delete-route="/admin/dosen/bulk-delete"
+                    :exportable="true"
                 >
-                    <!--
-                        You can still use slots if you need custom rendering beyond the default.
-                        The 'is_active' status is now handled automatically by AdminDataTable.
-                        Example:
-                    -->
-                    <!-- <template #cell-name="{ item }">
-                        <span class="font-bold">{{ item.name }}</span>
-                    </template> -->
-                </AdminDataTable>
+                    <!-- Custom Slots for Nested Fields -->
+                    <template #cell-profile_dosen.nidn="{ item }">
+                        {{ item.profile_dosen?.nidn || '-' }}
+                    </template>
+
+                    <template #cell-profile_dosen.prodi.nama="{ item }">
+                        {{ item.profile_dosen?.prodi?.nama || '-' }}
+                    </template>
+
+                    <template #cell-is_active="{ item }">
+                        <Tag 
+                            :value="item.is_active ? 'Aktif' : 'Tidak Aktif'" 
+                            :severity="getStatusSeverity(item.is_active)" 
+                            class="custom-badge"
+                            style="font-weight: 500 !important;"
+                        />
+                    </template>
+                </PrimeDataTable>
             </div>
         </div>
     </AppLayout>
 </template>
+
+<style scoped>
+/* Nuclear option for Badge Font Weight */
+:deep(.custom-badge),
+:deep(.custom-badge .p-tag-value),
+:deep(.p-tag.custom-badge),
+:deep(.p-tag.custom-badge span) {
+    font-weight: 500 !important;
+    font-family: 'Outfit', sans-serif !important;
+}
+</style>

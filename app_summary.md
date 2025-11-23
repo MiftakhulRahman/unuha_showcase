@@ -3630,3 +3630,46 @@ Sistem CRUD lengkap dengan menu berdasarkan role telah berhasil diimplementasika
    - Semua menu, label, placeholder, error messages, breadcrumbs dalam bahasa Indonesia
    - Toast notifications dalam bahasa Indonesia
    - Pagination text: "Menampilkan data", "dipilih", "Hapus Pilihan"
+
+   🔴 SUPERADMIN (Administrator Pusat)
+Manajemen User (CRUD Lengkap):
+
+Create (Buat): Dapat mendaftarkan akun baru untuk Dosen atau Mahasiswa secara manual jika diperlukan.
+
+Read (Lihat): Dapat melihat detail profil lengkap seluruh pengguna, termasuk biodata, riwayat login, dan aktivitas.
+
+Update (Ubah): Dapat mengedit data profil pengguna, melakukan reset password, mengubah role, serta mengaktifkan atau menonaktifkan status akun (suspend/ban).
+
+Delete (Hapus): Dapat menghapus akun Dosen atau Mahasiswa dari sistem (baik soft delete maupun permanen).
+
+Manajemen Master Data: Mengelola data referensi sistem seperti Data Program Studi (Prodi), Kategori Project, dan Daftar Teknologi.
+
+Manajemen Project: Memiliki akses mutlak untuk mengedit, menghapus, atau memoderasi semua project yang ada (termasuk menentukan project Featured).
+
+Manajemen Challenge: Dapat memantau, mengedit, atau membatalkan challenge yang dibuat oleh dosen.
+
+Laporan & Konfigurasi: Mengakses dashboard analitik global dan pengaturan website (banner, pengumuman, SEO).
+
+🔵 DOSEN
+Manajemen Challenge (Kompetisi): Membuat dan mengelola kompetisi (Create, Edit, Delete challenge sendiri), serta menentukan kriteria penilaian.
+
+Penilaian (Juri): Memeriksa submission mahasiswa, memberikan nilai (scoring), feedback, dan menentukan pemenang.
+
+Manajemen Project Pribadi: Mengupload dan mengelola portfolio penelitian atau pengabdian dosen sendiri.
+
+Profil Dosen: Mengupdate data akademis pribadi (NIDN, Jabatan, Link Scholar/Scopus).
+
+Kolaborasi: Menerima atau menolak ajakan kolaborasi project.
+
+🟢 MAHASISWA
+Manajemen Project (Portfolio): Mengupload karya (Create), mengedit detail (Update), dan mengatur status publish/draft project milik sendiri.
+
+Partisipasi Challenge: Mendaftar dan mengirimkan (Submit) project ke dalam challenge yang tersedia.
+
+Kolaborasi Tim: Mengundang teman untuk bergabung dalam satu project atau menerima undangan kolaborasi.
+
+Interaksi Sosial: Memberikan like, komentar, dan menyimpan (bookmark) project karya orang lain.
+
+Profil Mahasiswa: Mengelola biodata diri, skill, dan tautan media sosial profesional (LinkedIn/GitHub).
+
+
